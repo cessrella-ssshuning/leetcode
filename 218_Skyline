@@ -1,0 +1,71 @@
+class Solution {
+    
+    private class Point implements Comparable<Point>{
+        int x;
+        int height;
+        boolean isEntering;
+        public Point(int x, int height,boolean isEntering){
+            this.x = x;
+            this.height = height;
+            this.isEntering = isEntering;
+        }
+        public int compareTo(Point p){
+            if(this.x!=p.x){
+                return this.x-p.x;
+            }else{
+                if(this.isEntering&&p.isEntering){
+                    return p.height-this.height;
+                }else if(!this.isEntering&&!p.isEntering){
+                    return this.height-p.height;
+                }else{//important! to make sure entering point comes first when height is the same
+                    return this.isEntering?-1:1;
+                }    
+            }
+        }
+        
+        
+    }
+    //to find a DS can sort the elements based on height and can
+    //keep track of the largest element
+    public List<List<Integer>> getSkyline(int[][] buildings) {
+        List<List<Integer>> list = new ArrayList<>();
+        Point[] points = new Point[buildings.length*2];
+        int i = 0;
+        for(int[] building:buildings){
+            points[i++] = new Point(building[0],building[2],true);
+            points[i++] = new Point(building[1],building[2],false);
+        }
+        Arrays.sort(points);
+        //pq to keep track of the height and to remove based on key
+            PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
+        int max = 0;
+        pq.offer(0);
+        for(Point p:points){
+           // System.out.println(p.x+","+p.height+","+pq.size());
+            if(p.isEntering){
+                pq.offer(p.height);
+                if(p.height>max){
+                    max = p.height;
+                    List<Integer> coordinates = new ArrayList<>();
+                    coordinates.add(p.x);
+                    coordinates.add(p.height);
+                   // System.out.println(p.x+",entering,"+p.height);
+                    list.add(coordinates);
+                }
+            }else{
+                pq.remove(p.height);
+           //     System.out.println("peek:"+pq.peek());
+                if(pq.peek()<max){
+                    List<Integer> coordinates = new ArrayList<>();
+                    coordinates.add(p.x);
+                    coordinates.add(pq.peek());                                                       //  System.out.println(p.x+",leaving,"+pq.peek());
+                    list.add(coordinates);
+                    max = pq.peek();
+                }         
+            }
+        }
+        return list;
+    }
+    
+    
+}
