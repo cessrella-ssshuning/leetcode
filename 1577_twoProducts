@@ -1,0 +1,29 @@
+class Solution {
+    /*
+    [7,4]
+     ^
+    [5,2,8,9]
+     ^  
+    */
+    public int numTriplets(int[] n1, int[] n2) {
+        long res = 0;
+        for(long num:n1){
+            res += getCount(num*num,n2);
+        }
+        for(long num:n2){
+            res += getCount(num*num,n1);
+        }
+        return (int)res;
+    }
+    private long getCount(long product,int[] n){
+        Map<Long,Long> map = new HashMap<>();
+        long res = 0;
+        for(long num:n){
+            if(product%num==0){
+                res += map.getOrDefault(product/num,0l);
+            }
+            map.put(num,map.getOrDefault(num,0l)+1);
+        }
+        return res;
+    }
+}
