@@ -1,0 +1,30 @@
+class Solution {
+   
+    public int numSubseq(int[] nums, int target) {
+        Arrays.sort(nums);
+        int st = 0;
+        int res = 0;
+        int end = nums.length-1;
+        int mod = (int)1e9+7 ;
+        int[] power = new int[nums.length];
+        power[0] = 1;
+        for(int i = 1;i<nums.length;i++){
+            power[i] = power[i-1]*2%mod;
+        }
+        while(st<nums.length){
+                
+            while(end>=0&&nums[st]+nums[end]>target){
+                end--;
+            }
+            if(end<st){
+                break;
+            }else{
+                res = (res+power[end-st])%mod;
+                st++;
+            }                
+            
+        }
+        return res;     
+        
+    }
+}
