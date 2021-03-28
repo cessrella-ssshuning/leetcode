@@ -1,0 +1,54 @@
+class Solution {
+    /*
+    [2,4,5,8,10]
+              ^
+    [0,2,6,11,19,29]
+                 ^
+    [4,6,8,9,11]
+           ^
+    [0,4,10,18,27]
+          ^
+     idx1 3
+     idx2 2
+     pre1 1  11-2 = 9
+     pre2 0  10-0 = 10
+     sum1 2
+     sum2 4
+     sum 12
+    */
+    public int maxSum(int[] nums1, int[] nums2) {
+        int idx1 = 0,idx2 = 0;   
+        int n1 = nums1.length;
+        int n2 = nums2.length;
+        long sum = 0;
+        int preEqualIdx1 = 0,preEqualIdx2 = 0;
+        long[] sumNums1 = new long[n1+1];
+        long mod = (long)1e9+7;
+       
+        long[] sumNums2 = new long[n2+1];
+        for(int i = 0;i<n1;i++){
+            sumNums1[i+1] = sumNums1[i]+nums1[i]; 
+        }
+        for(int i = 0;i<n2;i++){
+            sumNums2[i+1] = sumNums2[i]+nums2[i]; 
+        }
+        while(idx1<n1||idx2<n2){
+            if(idx1==n1||idx2==n2){
+                sum = (sum + Math.max(sumNums1[n1]-sumNums1[preEqualIdx1],sumNums2[n2]-sumNums2[preEqualIdx2]))%mod;
+                return (int)sum;
+            }
+            if(nums1[idx1]==nums2[idx2]){               
+                sum = (sum + Math.max(sumNums1[idx1]-sumNums1[preEqualIdx1],sumNums2[idx2]-sumNums2[preEqualIdx2]))%mod;
+                preEqualIdx1 = idx1;
+                preEqualIdx2 = idx2;
+                idx1++;
+                idx2++;
+            }else if(nums1[idx1]<nums2[idx2]){
+                idx1++;
+            }else{
+                idx2++;
+            }     
+        }
+        return (int)sum;
+    }
+}
