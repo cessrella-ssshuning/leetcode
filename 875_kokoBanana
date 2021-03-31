@@ -1,0 +1,35 @@
+class Solution {
+    /*
+     [4,11,20,23,30]
+      
+      left   1
+      right  30
+      mid    15
+    */
+    public int minEatingSpeed(int[] piles, int h) {
+        int n = piles.length;
+        int left = 1;
+        int right = Integer.MIN_VALUE;
+        for(int i = 0;i<n;i++){
+            right = Math.max(right,piles[i]);
+        }
+        while(left+1<right){
+            int mid = left + (right-left)/2;
+            if(!canFinish(piles,mid,h)){
+                left = mid;
+            }else{
+                right = mid;
+            }
+        }
+        if(canFinish(piles,left,h)) return left;
+        else return right;
+
+    }
+    private boolean canFinish(int[] piles,long k,int h){
+        int res = 0;
+        for(int i = 0;i<piles.length;i++){
+            res += piles[i]%k==0?piles[i]/k:piles[i]/k+1;
+        }
+        return res<=h;
+    }
+}
