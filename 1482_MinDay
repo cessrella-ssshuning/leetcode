@@ -1,0 +1,40 @@
+class Solution {
+    /*
+    [1,10,3,10,2]
+        9     
+    1   0 1 0 
+    */
+    public int minDays(int[] bloomDay, int m, int k) {        
+        int left = 0;
+        int right = Integer.MAX_VALUE;
+        if(m*k>bloomDay.length) return -1; 
+        while(left+1<right){
+            int mid = left + (right-left)/2;
+            if(isEnough(bloomDay,m,k,mid)){
+                right = mid;
+            }else{
+                left = mid;
+            }
+                
+        }
+        if(isEnough(bloomDay,m,k,left)) return left;
+        else return right;
+    }
+    private boolean isEnough(int[] bloomDay,int m,int k,int val){
+        int currCnt = 0;
+        int count = 0;
+        for(int j = 0;j<bloomDay.length;j++){
+            if(bloomDay[j]-val<=0){
+                currCnt++;
+                if(currCnt>=k){
+                    count++;
+                    currCnt = 0;
+                }
+                if(count==m) return true;
+            }else{
+                currCnt = 0;
+            }
+        }
+        return false;
+    }
+}
