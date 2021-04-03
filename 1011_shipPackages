@@ -1,0 +1,53 @@
+class Solution {
+    /*
+    [1,2,3,4,5,6,7,8,9,10]
+                       ^
+     D   
+     left 0
+     right 55
+     mid 27
+     sum   10
+     
+     count 4
+    */
+    public int shipWithinDays(int[] weights, int D) {
+        int n = weights.length;
+        int sum = 0;
+        int res = Integer.MIN_VALUE;
+        for(int i = 0;i<n;i++){
+            sum += weights[i];
+            res = Math.max(res,weights[i]);
+        }
+        int left = res;
+        int right = sum;
+        
+        while(left+1<right){
+            int mid = left+(right-left)/2;
+            if(isOK(weights,mid,D)){
+                res = Math.min(res,mid);
+                right = mid;
+            }else{
+                left = mid+1;
+            }
+        }
+        if(isOK(weights,left,D)) return left;
+        else return right;
+    }
+    
+    private boolean isOK(int[] weights,int target,int D){
+        int sum = 0;
+        int count = 0;
+        for(int i = 0;i<weights.length;i++){
+            sum += weights[i];
+            if(sum>target){
+                sum = weights[i];
+                count++;
+            }else if(sum==target){
+                sum = 0;
+                count++;
+            }
+        }
+        if(sum>0) count++;
+        return count<=D;
+    }
+}
