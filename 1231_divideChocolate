@@ -1,0 +1,43 @@
+class Solution {
+    /*
+    the smaller the chunks, the more of the pieces
+    make the chunks maximum
+    minimum of all the pieces
+    pieces all >= target
+    the larger the target, the fewer number of piepces
+    make every piece larger than the target and meet the number of pieces
+    */
+    public int maximizeSweetness(int[] sweetness, int K) {
+        int sum = 0;
+        int min = Integer.MAX_VALUE;
+        for(int i = 0;i<sweetness.length;i++){
+            sum += sweetness[i];
+            min = Math.min(min,sweetness[i]);
+        }
+        int left = min;
+        int right = sum;
+        while(left+1<right){
+            int mid = left+(right-left)/2;
+            if(isOK(sweetness,K+1,mid)){
+                left = mid;
+            }else{
+                right = mid;
+            }
+        }
+        if(isOK(sweetness,K+1,right)) return right;
+        else return left;
+    }
+    
+    private boolean isOK(int[] sweetness,int K,int target){
+        int sum = 0;
+        int count = 0;
+        for(int i = 0;i<sweetness.length;i++){
+            sum += sweetness[i];
+            if(sum>=target){
+                sum = 0;
+                count++;
+            }
+        }
+        return count>=K;
+    }
+}
