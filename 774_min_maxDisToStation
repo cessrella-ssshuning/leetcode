@@ -1,0 +1,24 @@
+class Solution {
+    public double minmaxGasDist(int[] stations, int k) {
+        double left = 0;
+        double right = stations[stations.length-1]-stations[0];
+        while(right-left>1e-6){
+            double mid = (left + right)/2;
+            //make result the smallest
+            if(isOK(stations,k,mid)){
+                right = mid;
+            }else{
+                left = mid;
+            }
+        }
+        return left;
+    }
+    private boolean isOK(int[] stations,int k,double d){
+        int count = 0;
+        for(int i = 1;i<stations.length;i++){
+            double tmp = (stations[i]-stations[i-1])/d;
+            count+= Math.ceil(tmp)-1;
+        }
+        return count<=k;
+    }
+}
