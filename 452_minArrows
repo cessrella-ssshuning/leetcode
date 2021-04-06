@@ -1,0 +1,17 @@
+public int findMinArrowShots(int[][] points) {
+        Arrays.sort(points,(p1,p2)->p1[1]-p2[1]);
+        int count = 0;
+        int j = 0, i = 0;
+        while(i<points.length){
+            j = i;
+            i++;
+            while(j<points.length&&i<points.length){
+                long diff = points[i][0]-points[j][1];
+                if(diff<=0) i++;
+                else break;
+            }
+            count++;
+        }
+        return count;
+    }
+}
