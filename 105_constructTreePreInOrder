@@ -1,0 +1,22 @@
+class Solution {
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        if(preorder==null||preorder.length<=0) return null;
+        return buildHelper(preorder,inorder,0,preorder.length-1,0,inorder.length-1);
+        
+    }
+    private TreeNode buildHelper(int[] preorder,int[] inorder,int preSt,int preEnd,int inSt,int inEnd){
+        if(preSt>preEnd||inSt>inEnd) return null;
+        TreeNode node = new TreeNode(preorder[preSt]);
+        if(preSt==preEnd) return node;
+        int i = 0;
+        for(;i<inorder.length;i++){
+            if(inorder[i]==preorder[preSt]){
+                break;
+            }
+        }
+        int leftLen = i-inSt;
+        node.left = buildHelper(preorder,inorder,preSt+1,preSt+leftLen,inSt,i-1);
+        node.right = buildHelper(preorder,inorder,preSt+leftLen+1,preEnd,i+1,inEnd);
+        return node;
+    }
+}
