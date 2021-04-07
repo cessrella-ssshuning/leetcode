@@ -1,0 +1,19 @@
+class Solution {
+    public TreeNode buildTree(int[] inorder, int[] postorder) {
+        if(inorder==null||postorder==null||inorder.length==0||postorder.length==0||inorder.length!=postorder.length) return null;
+        return buildHelper(inorder,postorder,0,postorder.length-1,0,inorder.length-1);
+    }
+    private TreeNode buildHelper(int[] inorder,int[] postorder,int pstSt,int pstEnd,int inSt,int inEnd){
+        if(pstSt>pstEnd||inSt>inEnd) return null;
+        TreeNode node = new TreeNode(postorder[pstEnd]);
+        int i = 0;
+        while(i<inorder.length){
+            if(inorder[i]==postorder[pstEnd]) break;
+            i++;
+        }
+        int leftLen = i-inSt;
+        node.left = buildHelper(inorder,postorder,pstSt,pstSt+leftLen-1,inSt,i-1);
+        node.right = buildHelper(inorder,postorder,pstSt+leftLen,pstEnd-1,i+1,inEnd);
+        return node;
+    }
+}
