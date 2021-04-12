@@ -1,0 +1,33 @@
+class Solution {
+    public List<Integer> flipMatchVoyage(TreeNode root, int[] voyage) {
+        List<Integer> list = new ArrayList<>();
+        Stack<TreeNode> stack = new Stack<>();
+        int i = 0;
+        stack.push(root);
+        while((!stack.isEmpty()||root!=null)&&i<voyage.length){
+            TreeNode curr = stack.pop();
+            //even root value is not equal the voyage value, impossible to swap
+            if(curr.val!=voyage[i]){
+                list = new ArrayList<>();
+                list.add(-1);
+                return list;
+            }
+            i++;
+            //swap here to enter the next loop
+            if(curr.left!= null&&curr.left.val!=voyage[i]){
+                TreeNode tmp = curr.right;
+                curr.right = curr.left;
+                curr.left = tmp;
+                list.add(curr.val);
+            }
+            if(curr.right!=null){
+                stack.push(curr.right);
+            }
+            if(curr.left!=null){
+                stack.push(curr.left);
+            }
+        }
+        return list；  
+    }
+    
+}
