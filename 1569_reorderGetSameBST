@@ -1,0 +1,41 @@
+import java.math.BigInteger;
+class Solution {
+    long mod = 1000000007;
+    public int numOfWays(int[] nums) {
+        ArrayList<Integer> list = new ArrayList<>();
+        for(int i = 0;i<nums.length;i++){
+            list.add(nums[i]);
+        }
+        return (int)helper(list).longValue()-1;
+    }
+    private BigInteger helper(ArrayList<Integer> list){
+        ArrayList<Integer> left = new ArrayList<>();
+        ArrayList<Integer> right = new ArrayList<>();
+        if(list.size()==0) return BigInteger.ONE;     
+        int root = list.get(0);
+        for(int i = 1;i<list.size();i++){
+            if(list.get(i)<root){
+                left.add(list.get(i));
+            }else{
+                right.add(list.get(i));
+            }
+        }
+        BigInteger curr = getCombination(list.size()-1,Math.min(left.size(),right.size()));//C(m+n,n);
+        BigInteger leftNum = helper(left);
+        BigInteger rightNum = helper(right);
+        return curr.multiply(leftNum).multiply(rightNum).mod(BigInteger.valueOf(mod));
+    }
+    private BigInteger getCombination(int total,int n){
+        if(n==0) return BigInteger.ONE;
+        BigInteger res = BigInteger.ONE;
+        BigInteger tmp = BigInteger.ONE;
+        for(int i = 1;i<=n;i++,total--){
+            res = res.multiply(BigInteger.valueOf(total));
+            res = res.divide(BigInteger.valueOf(i));
+            
+        }
+        
+        return res;
+    }
+    
+}
