@@ -1,0 +1,35 @@
+public Node expTree(String s) {
+        int counter = 0;
+        Node node = null;
+       // if(s==null||s.length()==0) return node;
+        if(s.length()==1){
+            node = new Node(s.charAt(0));
+            return node;
+        }       
+        for(int i = s.length()-1;i>=0;i--){
+            if(s.charAt(i)=='(') counter++;
+            if(s.charAt(i)==')') counter--;
+            if((s.charAt(i)=='+'||s.charAt(i)=='-')&&counter==0){
+                node = new Node(s.charAt(i));
+                node.left = expTree(s.substring(0,i));
+                node.right = expTree(s.substring(i+1,s.length()));
+                return node;
+            }      
+        }
+        for(int i = s.length()-1;i>=0;i--){
+            if(s.charAt(i)=='(') counter++;
+            if(s.charAt(i)==')') counter--;
+            if((s.charAt(i)=='*'||s.charAt(i)=='/')&&counter==0){
+                node = new Node(s.charAt(i));
+                node.left = expTree(s.substring(0,i));
+                node.right = expTree(s.substring(i+1,s.length()));
+                return node;
+            }  
+        }
+        
+        if(s.charAt(0)=='('&&s.charAt(s.length()-1)==')'){
+            return expTree(s.substring(1,s.length()-1));
+        }
+        return null;
+        
+    }
