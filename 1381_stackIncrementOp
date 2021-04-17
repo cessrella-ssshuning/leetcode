@@ -1,0 +1,29 @@
+class CustomStack {
+    int[] stack;
+    int pointer;
+    public CustomStack(int maxSize) {
+        stack = new int[maxSize];
+        pointer = 0;
+    }
+    
+    public void push(int x) {
+        if(pointer<stack.length){
+            stack[pointer] = x;
+            pointer++;
+        }       
+    }
+    
+    public int pop() {
+        if(pointer==0) return -1;
+        else{
+            pointer--;
+            return stack[pointer];
+        }  
+    }
+    
+    public void increment(int k, int val) {
+        for(int i = 0;i<k&&i<stack.length;i++){
+            stack[i] += val;
+        }
+    }
+}
