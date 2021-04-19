@@ -1,0 +1,74 @@
+class LFUCache {
+    /*
+    freq1   freq2   freq3    freq4   freq5
+    {k1,k2} {k3}   {k4,k5}   {k6,k7} {k8}
+    linkedlist defined by node class
+    map{freq,list}
+    map{key,value}
+    map{key,freq}
+    freq->linkedhashset -> keys, in the linkedhashset we know the position of the current iter   
+    */
+    Map<Integer,LinkedHashSet<Integer>> freq2List;
+    Map<Integer,Integer> key2Freq;
+    Map<Integer,Integer> key2Val;
+    int cap;
+    int min;
+    public LFUCache(int capacity) {
+        freq2List = new HashMap<>();
+        key2Freq = new HashMap<>();
+        key2Val = new HashMap<>();
+        this.cap = capacity;
+        min = -1;
+    }
+    
+    public int get(int key) {
+        if(!key2Val.containsKey(key)||cap<=0) return -1;
+        
+        updateFreq2List(key,true);
+        //return val
+        return key2Val.get(key);
+    }
+    private void updateFreq2List(int key,boolean keyExists){
+        int currFreq = key2Freq.getOrDefault(key,0);
+        if(keyExists){
+            LinkedHashSet<Integer> keySet = freq2List.get(currFreq);
+            keySet.remove(key);
+            if(keySet.isEmpty()){
+                freq2List.remove(currFreq);
+            }
+        }
+        //update freq of key in freq2List
+        if(!freq2List.containsKey(currFreq+1)){
+            freq2List.put(currFreq+1,new LinkedHashSet<Integer>());
+        }
+        freq2List.get(currFreq+1).add(key);
+        //update freq of key in key2Freq
+        key2Freq.put(key,currFreq+1);
+        min = Math.min(min,currFreq+1);
+    }
+    
+    public void put(int key, int value) {
+        if(cap<=0) return;
+        if(key2Val.size()>=cap&&!key2Val.containsKey(key)||key2Val.size()>cap){         
+            LinkedHashSet<Integer> keySet = freq2List.entrySet().iterator().next().getValue();
+            int keyToEvict = keySet.iterator().next();
+            keySet.remove(keyToEvict);
+            key2Val.remove(keyToEvict);
+            key2Freq.remove(keyToEvict);
+        }
+        if(key2Freq.containsKey(key)){
+            updateFreq2List(key,true);
+        }else{
+            updateFreq2List(key,false);
+        }
+        key2Val.put(key,value);
+    }
+    
+}
+
+/**
+ * Your LFUCache object will be instantiated and called as such:
+ * LFUCache obj = new LFUCache(capacity);
+ * int param_1 = obj.get(key);
+ * obj.put(key,value);
+ */
