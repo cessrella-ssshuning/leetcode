@@ -1,0 +1,74 @@
+class NumArray {
+    class SegmentTree{
+        SegmentTree left;
+        SegmentTree right;
+        int info;
+        int start;
+        int end;
+        public SegmentTree(int a,int b){
+            info = 0;
+            start = a;
+            end = b;
+            SegmentTree left= null;
+            SegmentTree right = null;
+        }   
+    }
+    private void init(SegmentTree node,int start,int end){
+        if(start==end){
+            node.info = nums[start];
+            return;
+        }
+        int mid = start + (end-start)/2;
+        node.left = new SegmentTree(start,mid);
+        node.right = new SegmentTree(mid+1,end);
+        init(node.left,start,mid);
+        init(node.right,mid+1,end);
+        node.info = node.left.info + node.right.info;
+    }
+    
+    private void updateNode(SegmentTree node,int index,int val){
+        if(index>node.end||index<node.start){
+            return;
+        }
+        if(node.start==node.end){
+            nums[index] = val;
+            node.info = val;
+            return;
+        }
+        updateNode(node.left,index,val);
+        updateNode(node.right,index,val);
+        node.info = node.left.info + node.right.info;
+    }
+    
+    private int queryRange(SegmentTree node,int left,int right){
+        if(node.end<left||node.start>right){
+            return 0;
+        }
+        if(node.start>=left&&node.end<=right){
+            return node.info;
+        }
+        return queryRange(node.left,left,right)+queryRange(node.right,left,right);     
+    }
+    SegmentTree root;
+    int[] nums;
+    public NumArray(int[] nums) {
+        root = new SegmentTree(0,nums.length-1);
+        this.nums = nums;
+        init(root,0,nums.length-1);
+    }
+    
+    public void update(int index, int val) {
+        updateNode(root,index,val);
+    }
+    
+    public int sumRange(int left, int right) {
+        return queryRange(root,left,right);
+    }
+}
+
+/**
+ * Your NumArray object will be instantiated and called as such:
+ * NumArray obj = new NumArray(nums);
+ * obj.update(index,val);
+ * int param_2 = obj.sumRange(left,right);
+ */
