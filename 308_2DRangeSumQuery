@@ -1,0 +1,93 @@
+class NumMatrix {
+
+    class SegmentTree{
+        SegmentTree upLeft,upRight,lowLeft,lowRight;
+        int row1,col1,row2,col2;
+        int info;
+        public SegmentTree(int row1,int row2,int col1,int col2){
+            upLeft = null;
+            upRight = null;
+            lowLeft = null;
+            lowRight = null;
+            this.row1 = row1;
+            this.col1 = col1;
+            this.row2 = row2;
+            this.col2 = col2;
+            info = 0;
+        }
+    }
+    private void init(SegmentTree root,int row1,int row2,int col1,int col2){
+     //   System.out.println(row1+","+row2+","+col1+","+col2);
+        if (row2 < row1 || col2 < col1)
+            return;
+        if(row1==row2&&col1==col2){
+            root.info = matrix[row1][col1];
+            return;
+        }
+        int rowMid = (row1+row2)/2;
+        int colMid = (col1+col2)/2;
+        root.upLeft = new SegmentTree(row1,rowMid,col1,colMid);
+        root.upRight = new SegmentTree(row1,rowMid,colMid+1,col2);
+        root.lowLeft = new SegmentTree(rowMid+1,row2,col1,colMid);
+        root.lowRight = new SegmentTree(rowMid+1,row2,colMid+1,col2);
+        init(root.upLeft,row1,rowMid,col1,colMid);
+        init(root.upRight,row1,rowMid,colMid+1,col2);
+        init(root.lowLeft,rowMid+1,row2,col1,colMid);
+        init(root.lowRight,rowMid+1,row2,colMid+1,col2);
+        root.info = root.upLeft.info+root.upRight.info+root.lowLeft.info+root.lowRight.info;
+    }
+    private void updateMatrix(SegmentTree node,int row,int col,int val){
+        if(node.row1==node.row2&&row==node.row1&&node.col1==node.col2&&node.col1==col){
+          //  matrix[row][col] = val;
+            node.info = val;
+            return;
+        }
+        int rowMid = (node.row1 + node.row2) / 2;
+        int colMid = (node.col1 + node.col2) / 2;
+        SegmentTree next = null;
+        if(row<=rowMid){
+            if(col<=colMid){
+                next = node.upLeft;
+            }else{
+                next = node.upRight;
+            }
+        }else{
+            if(col<=colMid){
+                next = node.lowLeft;
+            }else{
+                next = node.lowRight;
+            }
+        }
+        node.info -= next.info;//deduct it before update,if not deducting, should update the diff
+        updateMatrix(next,row,col,val);
+        node.info += next.info;
+    }
+    private int queryRange(SegmentTree node,int row1,int col1,int row2,int col2){
+        if(node==null) return 0;
+        if(row1>node.row2||col2<node.col1||row2<node.row1||col1>node.col2) return 0;
+        if(node.row1>=row1&&node.row2<=row2&&node.col1>=col1&&node.col2<=col2){
+            return node.info;
+        }
+        return queryRange(node.upLeft,row1,col1,row2,col2)+
+               queryRange(node.lowLeft,row1,col1,row2,col2)+
+               queryRange(node.upRight,row1,col1,row2,col2)+
+               queryRange(node.lowRight,row1,col1,row2,col2);
+    }
+    int[][] matrix;
+    SegmentTree root;
+    public NumMatrix(int[][] matrix) {
+        this.matrix = matrix;
+        int n = matrix.length;
+        int m = matrix[0].length;
+        root = new SegmentTree(0,n-1,0,m-1);
+        init(root,0,n-1,0,m-1);
+    }
+    
+    public void update(int row, int col, int val) {
+        updateMatrix(root,row,col,val);
+    }
+    
+    public int sumRegion(int row1, int col1, int row2, int col2) {
+        return queryRange(root,row1,col1,row2,col2);
+    }
+}
