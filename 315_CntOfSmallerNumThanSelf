@@ -1,0 +1,62 @@
+class Solution {
+    private class Node {
+        int val;
+        int idx;
+        
+        public Node(int val, int idx) {
+            this.val = val;
+            this.idx = idx;
+        }
+    }
+    int[] count;
+    public List<Integer> countSmaller(int[] nums) {
+        count = new int[nums.length];
+        Node[] sortedNum = new Node[nums.length];
+        for(int i = 0;i<nums.length;i++){
+            sortedNum[i] = new Node(nums[i],i);
+        }
+        helper(sortedNum,0,nums.length-1);
+        List<Integer> res = new ArrayList<>();
+        for(int n:count){
+            res.add(n);
+        }
+        return res;
+    }
+    private void helper(Node[] sortedNum,int st,int end){
+        if(st>=end) return;
+        int mid = st + (end-st)/2;
+        helper(sortedNum,st,mid);
+        helper(sortedNum,mid+1,end);  
+        LinkedList<Node> merged = new LinkedList<Node>();
+        int numLessThanLeft = 0;
+        int i = st,j = mid+1;
+        while(i<=mid&&j<=end){
+            if(sortedNum[i].val>sortedNum[j].val){
+                numLessThanLeft++;
+                merged.add(sortedNum[j]);
+                j++;    
+            }else{
+                count[sortedNum[i].idx] += numLessThanLeft;
+                merged.add(sortedNum[i]);
+                i++;  
+            }
+        }
+        while(i<=mid){
+            count[sortedNum[i].idx] += numLessThanLeft;
+            merged.add(sortedNum[i]);
+            i++;
+        }
+        while(j<=end){
+            merged.add(sortedNum[j]);
+            j++;
+        }
+        
+        int k = st;
+        for (Node node : merged) {
+            sortedNum[k] = node;
+            k++;
+        }
+    }
+    
+    
+}
