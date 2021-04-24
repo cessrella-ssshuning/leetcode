@@ -1,0 +1,55 @@
+class Solution {
+    /*
+    the difference between 327 and 315 is that the count doesn't need to be
+    paired with index, which is easier in this case
+    X X X X X Y Y Y Y Y
+    st       mid      end
+       i        j
+    ^         
+              ^
+     find a pair
+      lower<=sum(i,j)<=upper
+      lower<=preSum[j]-preSum[i]<=upper
+      fixed i: preSum[j]<=preSum[i]+upper  count of smaller num after self
+               preSum[j]>=preSum[i]+lower  count of larger num after self
+    */
+    int res = 0;
+    public int countRangeSum(int[] nums, int lower, int upper) {
+        long[] preSum = new long[nums.length+1];
+        for(int i = 0;i<nums.length;i++){
+            preSum[i+1] = preSum[i]+(long)nums[i];
+        }
+        helper(preSum,0,preSum.length-1,lower,upper);
+        return res;
+    }
+    private void helper(long[] preSum,int st,int end,int lower,int upper){
+        if(st>=end) return;
+        int mid = st + (end - st)/2;
+        helper(preSum,st,mid,lower,upper);
+        helper(preSum,mid+1,end,lower,upper);
+        int i = st,j = mid+1,k = 0,low = mid+1,high = mid+1;
+        long[] tmp = new long[end-st+1];
+        while(i<=mid){
+            while(high<=end&&preSum[high]<=preSum[i]+upper){
+                high++;
+            }
+            while(low<=end&&preSum[low]<preSum[i]+lower){
+                low++;
+            }
+            while(j<=end&&preSum[j]<preSum[i]){
+                tmp[k++] = preSum[j++];
+            }
+            tmp[k++] = preSum[i++];
+            res += high-low;
+          
+        }
+        
+        while(j<=end){
+            tmp[k++] = preSum[j++];
+        }
+        for(int m = 0;m<k;m++){
+            preSum[m+st] = tmp[m];
+        }
+    }
+    
+}
