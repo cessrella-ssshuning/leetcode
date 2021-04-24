@@ -1,0 +1,52 @@
+class Solution {
+    /*
+    [2,4,3,5,1]
+     0 1 2 3 4
+     [2,4,3]
+      0 1 2
+      [2,4 , 3]
+      
+     ^
+     make the subarray in ascending order
+     to find the last pair meeting nums[left]>2*nums[right]
+    */
+    int count;
+    public int reversePairs(int[] nums) {
+        count = 0;
+        long[] sortedNum = new long[nums.length];
+        for(int i = 0;i<nums.length;i++){
+            sortedNum[i] = (long)nums[i];
+        }
+        helper(sortedNum,0,nums.length-1);
+        return count;
+    }
+    private void helper(long[] nums,int st,int end){
+        if(st>=end) return;
+        int mid = st + (end - st)/2;
+        helper(nums,st,mid);
+        helper(nums,mid+1,end);
+        int left = st, right = mid+1,j = mid+1,k = 0;
+        long[] temp = new long[end-st+1];
+        while(left<=mid){
+            while(j<=end&&nums[left]>2*nums[j]){
+                j++;
+                             
+            }
+            while(right<=end&&nums[right]<nums[left]){
+                temp[k++] = nums[right++];
+            }
+            temp[k++] = nums[left++];
+            //instead of using count++, the number of count is accumulated
+            //for example, when (3,4) meets (1,5)
+            //3 meets the requirement, when comes to 4the cursor is already moved to 5, but 4 still have the pair(4,1)
+            count += j-(mid+1);
+            
+        }
+        while(right<=end){
+            temp[k++] = nums[right++];
+        }
+        for(int i = 0;i<k;i++){
+            nums[i+st] = temp[i];
+        }
+    }
+}
