@@ -1,0 +1,93 @@
+class Solution {
+    /*
+    class Node{
+        int less;
+        int more;
+        int val;
+        public Node(int val){
+            this.val = val;
+        }
+    }
+    public int createSortedArray(int[] instructions) {
+        int MOD = (int)(1e9 + 7);
+        Node[] nodes = new Node[instructions.length];
+        for(int i = 0;i<instructions.length;i++){
+            nodes[i] = new Node(instructions[i]);
+        }
+        helper(nodes,0,instructions.length-1);
+        long cost = 0;
+        for (Node node : nodes) {
+            cost = (cost + (long)Math.min(node.less, node.more)) % MOD;
+        }
+        return (int)cost;
+    }
+    private void helper(Node[] nodes,int st,int end){
+        if(st>=end) return;
+        int mid = st + (end - st)/2;
+        helper(nodes,st,mid);
+        helper(nodes,mid+1,end);
+        List<Node> temp = new ArrayList<>();
+        int left = st,right = mid+1,k = 0,equalNum = 0;
+        //the count increases only after the first merge happens
+        while(right<=end){
+            while(left<=mid&&nodes[left].val<nodes[right].val){
+                //left sub is already sorted
+                //iterate from left to right
+                temp.add(nodes[left++]);
+            }
+            
+            equalNum = left;
+            while(equalNum<=mid&&nodes[equalNum].val==nodes[right].val){
+                equalNum++;
+            }
+            nodes[right].less += left - st;
+            nodes[right].more += mid - equalNum + 1;
+            
+            temp.add(nodes[right++]);
+            
+        }
+        while(left<=mid){
+            temp.add(nodes[left++]);
+        }
+        for(int i = 0;i<temp.size();i++){
+            nodes[i+st] = temp.get(i);
+        }
+    }
+     */
+    int[] bitArr;
+    int max = 100000;
+    int mod = (int)1e9 + 7;
+    public int createSortedArray(int[] instructions) {
+        int res = 0, n = instructions.length;
+        bitArr = new int[max+1];
+        for(int i = 0;i<n;i++){
+            int num = instructions[i];
+            int less = querySum(1,num-1);
+            int more = querySum(num+1,max);
+            update(num);
+            res = (res + Math.min(less,more))%mod;             
+        }
+        return res;
+    }
+
+    public void update(int index) {
+        while(index<=100000){
+            bitArr[index]++;//update the count
+            bitArr[index] %= mod;
+            index += index&(-index);
+        }
+    }
+    private int preQuerySum(int index){
+        int res = 0;
+        while(index>0){
+            res += bitArr[index];
+            res %= mod;
+            index -= index&(-index);
+        }
+        return res;
+    }
+    public int querySum(int i,int j) {
+        return preQuerySum(j)-preQuerySum(i-1);
+    }
+    
+}
