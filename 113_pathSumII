@@ -1,0 +1,22 @@
+class Solution {
+    List<List<Integer>> res;
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        res = new ArrayList<>();
+        pathSumHelper(root,targetSum,new ArrayList<>());
+        return res;
+    }
+    private void pathSumHelper(TreeNode node,int target,List<Integer> list){
+        if(node==null) return;
+        list.add(node.val);
+        
+        if(target-node.val==0&&node.left==null&&node.right==null){
+            
+            res.add(new ArrayList<>(list));
+            
+        }
+        pathSumHelper(node.left,target-node.val,list);
+        pathSumHelper(node.right,target-node.val,list); 
+        list.remove(list.size()-1);
+        
+    }
+}
