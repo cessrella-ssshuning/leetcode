@@ -1,0 +1,28 @@
+class Solution {  
+    Map<Integer,Integer> map;
+    int sum;
+    public int pathSum(int[] nums) {
+        sum = 0;
+        map = new HashMap<>();
+        for(int i = 0;i<nums.length;i++){
+            int level = nums[i]/10;
+            int val = nums[i]%10;
+            map.put(level,val);
+        }
+        pathSumHelper(nums[0]/10,0);
+        return sum;
+    }
+    private void pathSumHelper(int num,int preSum){
+        int level = num/10;
+        int pos = num%10;
+        int left = (level+1)*10+pos*2-1;
+        int right = (level+1)*10+pos*2;
+
+        int currSum = preSum + map.get(num);
+        if(!map.containsKey(left)&&!map.containsKey(right)){//this means curr node is leaf node
+            sum += currSum;
+        }
+        if(map.containsKey(left)) pathSumHelper(left,currSum);
+        if(map.containsKey(right)) pathSumHelper(right,currSum);
+    }      
+}
