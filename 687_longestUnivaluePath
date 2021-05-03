@@ -1,0 +1,28 @@
+class Solution {
+    int res;
+    public int longestUnivaluePath(TreeNode root) {
+        res = 0;
+        longestUnivaluePathHelper(root);
+        return res;
+    }
+    private int longestUnivaluePathHelper(TreeNode node){
+        if(node==null) return 0;
+        int currLen = 0,left = 0, right = 0;
+        
+        if(node.left!=null&&node.left.val==node.val){
+            left = longestUnivaluePathHelper(node.left)+1;
+        }else{
+            longestUnivaluePathHelper(node.left);
+        }
+        if(node.right!=null&&node.right.val==node.val){
+            right = longestUnivaluePathHelper(node.right)+1;//avoid adding left+right+2 for res because when either of the left or right node is non existent, adding 2 is incorrect
+        }else{
+            longestUnivaluePathHelper(node.right);
+        }
+        
+        currLen = Math.max(left,right);
+        res = Math.max(res,left+right);
+        
+        return currLen;
+    }
+}
