@@ -1,0 +1,42 @@
+class Solution {
+    Map<TreeNode,TreeNode> map;
+    public List<Integer> distanceK(TreeNode root, TreeNode target, int K) {
+        List<Integer> res = new ArrayList<>();
+        map = new HashMap<>();
+        buildMap(root,null);
+        Queue<TreeNode> queue = new LinkedList<>();
+        Set<TreeNode> set = new HashSet<>();
+        queue.offer(target);
+        while(!queue.isEmpty()){
+            int size = queue.size();
+            if(K==0){
+                for(int i = 0;i<size;i++){
+                    res.add(queue.poll().val);
+                }  
+                return res;
+            }          
+            for(int i = 0;i<size;i++){
+                TreeNode node = queue.poll();
+                set.add(node);
+                if(map.containsKey(node)&&!set.contains(map.get(node))){
+                    queue.offer(map.get(node));
+                }
+                if(node.left!=null&&!set.contains(node.left)){
+                    queue.offer(node.left);
+                }
+                if(node.right!=null&&!set.contains(node.right)){
+                    queue.offer(node.right);
+                }
+            }
+            K--;
+        }
+        return res;
+    }       
+    private void buildMap(TreeNode node,TreeNode parent){
+        if(node==null) return;
+        if(parent!=null) map.put(node,parent);
+        buildMap(node.left,node);
+        buildMap(node.right,node);
+        
+    }
+}
