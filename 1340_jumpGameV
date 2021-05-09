@@ -1,0 +1,31 @@
+class Solution {
+    int[] mem;
+    int d;
+    public int maxJumps(int[] arr, int d) {
+        int res = 0;
+        this.d = d;
+        mem = new int[arr.length];
+        for(int i = 0;i<arr.length;i++){
+            dfs(arr,i);
+            res = Math.max(res,mem[i]);
+        }
+        return res;
+    }
+    private int dfs(int[] arr,int idx){
+        if(mem[idx]>0) return mem[idx];
+        int res = 1;
+        for(int k = idx+1;k<=idx+d;k++){
+            if(k>=arr.length) break;
+            if(arr[k]>=arr[idx]) break;
+            res = Math.max(res,dfs(arr,k)+1);
+        }
+        for(int k = idx-1;k>=idx-d;k--){
+            if(k<0) break;
+            if(arr[k]>=arr[idx]) break;
+            res = Math.max(res,dfs(arr,k)+1);
+        }
+        mem[idx] = res;
+        return res;
+    }
+    
+}
