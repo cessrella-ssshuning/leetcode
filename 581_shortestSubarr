@@ -1,0 +1,21 @@
+class Solution {
+    public int findUnsortedSubarray(int[] nums) {
+        if(nums.length==1) return 0;
+        int n = nums.length,st = 0,end = -1;
+        int max = Integer.MIN_VALUE;
+        int min = Integer.MAX_VALUE;
+        for(int i  = 0;i<n;i++){
+            max = Math.max(max,nums[i]);//max will be constantly updated if it's in ascending order
+            if(nums[i]<max){//find the one that is not ascending element but not break
+                end = i;
+            }
+        }
+        for(int i = n-1;i>=0;i--){
+            min = Math.min(min,nums[i]);//min will be constantly updated if it's in ascending order
+            if(nums[i]>min){
+                st = i;
+            }
+        }
+        return end-st+1;
+    }
+}
