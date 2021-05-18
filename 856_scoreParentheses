@@ -1,0 +1,27 @@
+class Solution {
+    /*
+    "(()(()))"
+            ^
+     {0,,}
+     cur 7
+    */
+    public int scoreOfParentheses(String s) {
+        Stack<Integer> stack = new Stack<>();
+        int cur = 0;//use cur to store current value within a scope
+        for(int i = 0;i<s.length();i++){
+            if(s.charAt(i)==')'){
+                if(cur!=0){
+                    cur*=2;
+                }else{
+                    cur = 1;
+                }
+                cur += stack.pop();
+                
+            }else{
+                stack.push(cur);
+                cur = 0;
+            }
+        }
+        return cur;
+    }
+}
