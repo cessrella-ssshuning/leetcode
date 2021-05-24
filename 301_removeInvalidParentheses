@@ -1,0 +1,46 @@
+class Solution {
+    
+    public List<String> removeInvalidParentheses(String s) {
+        List<String> res = new ArrayList<>();
+        int l = 0,r = 0;
+        for(int i = 0;i<s.length();i++){
+            if(s.charAt(i)=='('){
+                l++;
+            }
+            if(s.charAt(i)==')'){
+                if(l==0) r++;
+                else l--;
+            }
+        } 
+        dfs(s,res,l,r,0);
+        return res;
+    }
+    
+    private void dfs(String s,List<String> res,int l,int r,int start){
+        if(l==0&&r==0){
+            if(isValid(s)) res.add(s);
+            return;
+        }
+        for(int i = start;i<s.length();i++){
+            if(i!=start&&s.charAt(i)==s.charAt(i-1)) continue;//avoid adding duplicate string
+            StringBuilder sb = new StringBuilder();
+            sb.append(s.substring(0,i));
+            sb.append(s.substring(i+1));
+            if(l>0&&s.charAt(i)=='(') dfs(sb.toString(),res,l-1,r,i);
+            else if(r>0&&s.charAt(i)==')') dfs(sb.toString(),res,l,r-1,i);
+        }
+        
+    }
+    
+    private boolean isValid(String s){  
+        int count = 0;
+        for(int i = 0;i<s.length();i++){
+            if(s.charAt(i)=='(') count++;
+            if(s.charAt(i)==')'){
+                if(count==0) return false;
+                else count--;
+            }
+        }
+        return count==0;       
+    }
+}
