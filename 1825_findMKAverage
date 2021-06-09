@@ -1,0 +1,113 @@
+class MKAverage {
+
+    int m,k;
+    long sum;
+    Queue<Integer> queue = new LinkedList<>();
+    TreeMap<Integer,Integer> left;
+    TreeMap<Integer,Integer> mid;
+    TreeMap<Integer,Integer> right;
+    int countLeft = 0, countRight = 0;
+    public MKAverage(int m, int k) {
+        this.m = m;
+        this.k = k;
+        sum = 0;
+        queue = new LinkedList<>();
+        left = new TreeMap<>();
+        mid = new TreeMap<>();
+        right = new TreeMap<>();
+    }
+    
+    public void addElement(int num) {
+        
+        if(queue.size()<m){
+            queue.offer(num);
+            mid.put(num,mid.getOrDefault(num,0)+1);
+            sum += num;
+            
+            if(queue.size()==m){
+                while(countLeft<k&&!mid.isEmpty()){
+                    sum -= mid.firstKey();
+                    shiftLeft(left,mid);
+                    countLeft++;
+                }
+                while(countRight<k&&!mid.isEmpty()){
+                    sum -= mid.lastKey();
+                    shiftRight(mid,right);
+                    countRight++;
+                }
+            }
+        }else if(queue.size()==m){
+            //add the new element
+            queue.offer(num);
+            if(num<=left.lastKey()){
+                left.put(num,left.getOrDefault(num,0)+1);
+                countLeft++;
+            }else if(num>=right.firstKey()){
+                right.put(num,right.getOrDefault(num,0)+1);
+                countRight++;
+            }else{
+                mid.put(num,mid.getOrDefault(num,0)+1);
+                sum += num;
+            }
+            //adjust
+            while(countLeft>k){
+                sum += left.lastKey();
+                shiftRight(left,mid);
+                countLeft--;
+            }
+            while(countRight>k){
+                sum += right.firstKey();
+                shiftLeft(mid,right);
+                countRight--;
+            }
+
+            //delete the old element
+            int val = queue.poll();
+            if(left.containsKey(val)){
+                remove(left,val);
+                countLeft--;
+            }else if(right.containsKey(val)){
+                remove(right,val);
+                countRight--;
+            }else{
+                sum -= val;
+                remove(mid,val);
+            }
+            //adjust
+            while(countLeft<k&&!mid.isEmpty()){
+                sum -= mid.firstKey();
+                countLeft++;
+                shiftLeft(left,mid);
+            }
+            while(countRight<k&&!mid.isEmpty()){
+                sum -= mid.lastKey();
+                countRight++;
+                shiftRight(mid,right);
+            }
+            
+        }
+    }
+    private void remove(TreeMap<Integer, Integer> map, int num) {
+        map.put(num,map.get(num)-1);
+        if(map.get(num)==0) map.remove(num);
+    }
+   
+    private void shiftLeft(TreeMap<Integer,Integer> left,TreeMap<Integer,Integer> right){
+        int val = right.firstKey();
+        left.put(val,left.getOrDefault(val,0)+1);
+        remove(right,val);
+    }
+    private void shiftRight(TreeMap<Integer,Integer> left,TreeMap<Integer,Integer> right){
+        int val = left.lastKey();
+        right.put(val,right.getOrDefault(val,0)+1);
+        remove(left,val);
+    }
+    
+    
+    public int calculateMKAverage() {
+        if(queue.size()<m) return -1;
+        else{
+            return (int)(sum/(m-2*k));
+        }
+    }
+}
