@@ -1,0 +1,28 @@
+class Solution {
+    public int minimumDeviation(int[] nums) {
+        PriorityQueue<Integer> pqMax = new PriorityQueue<>(Collections.reverseOrder());
+        PriorityQueue<Integer> pqMin = new PriorityQueue<>();
+        for(int i = 0;i<nums.length;i++){
+            if(nums[i]%2!=0){//odd
+                pqMax.offer(nums[i]*2);
+                pqMin.offer(nums[i]*2);
+            }else{
+                pqMax.offer(nums[i]);
+                pqMin.offer(nums[i]);
+            }
+        }
+        int res = Integer.MAX_VALUE;
+        while(!pqMax.isEmpty()){
+            int max = pqMax.poll();
+            int min = pqMin.peek();
+            res = Math.min(res,max-min);
+            if(max%2==0){
+                pqMax.offer(max/2);
+                pqMin.offer(max/2);
+            }else{//become the last element
+                break;
+            }
+        }
+        return res;
+    }
+}
