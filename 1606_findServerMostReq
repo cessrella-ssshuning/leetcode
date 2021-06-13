@@ -1,0 +1,33 @@
+class Solution {
+    public List<Integer> busiestServers(int k, int[] arrival, int[] load) {
+        List<Integer> res = new ArrayList<>();
+        TreeSet<Integer> available = new TreeSet<>();
+        int[] counter = new int[k];
+        for(int i = 0;i<k;i++){
+            available.add(i);
+        }
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a,b)->a[0]-b[0]);
+        for(int i = 0;i<arrival.length;i++){
+            int currTime = arrival[i];
+            int endTime = arrival[i]+load[i];
+            while(!pq.isEmpty()&&pq.peek()[0]<=currTime){
+                available.add(pq.poll()[1]);
+            }
+            if(available.size()==0) continue;
+            Integer assignNum = available.ceiling(i%k);
+            if(assignNum==null) assignNum = available.first();
+            available.remove(assignNum);
+            counter[assignNum]++;
+            pq.offer(new int[]{endTime,assignNum});
+        }
+        int max = Integer.MIN_VALUE;
+        for(int i = 0;i<counter.length;i++){
+            max = Math.max(max,counter[i]);
+        }
+        for(int i = 0;i<counter.length;i++){
+            if(max==counter[i])
+                res.add(i);
+        }
+        return res;
+    }
+}
