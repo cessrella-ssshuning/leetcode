@@ -1,0 +1,25 @@
+class Solution {
+    /*
+    [9,8,1,0,1,9,4,0,4,1]
+     0 1 2 3 4 5 6 7 8 9
+                       ^
+     res  7
+     stack (0,1,)
+    */
+    public int maxWidthRamp(int[] nums) {
+        Stack<Integer> stack = new Stack<>();
+        int res = 0;
+        for(int i = 0;i<nums.length;i++){
+            if(stack.isEmpty()||nums[stack.peek()]>nums[i]){
+                stack.push(i);
+            }
+        }
+        for(int i = nums.length-1;i>=0&&!stack.isEmpty();i--){
+            while(!stack.isEmpty()&&nums[stack.peek()]<=nums[i]){
+                res = Math.max(res,i-stack.pop());
+                
+            }
+        }
+        return res;
+    }
+}
