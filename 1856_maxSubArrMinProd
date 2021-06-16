@@ -1,0 +1,43 @@
+class Solution {
+    // X X 2 4 3 2 X 
+    //   a   ^     b  
+    long[] preSum;
+    public int maxSumMinProduct(int[] nums) {
+        int n = nums.length;
+        preSum = new long[n+1];
+        for(int i = 0;i<n;i++){
+            preSum[i+1] = preSum[i]+nums[i];
+        }
+        Stack<Integer> stack = new Stack<>();
+        int[] nextSmaller = new int[n];
+        int[] preSmaller = new int[n];
+        for(int i = 0;i<n;i++){
+            while(!stack.isEmpty()&&nums[stack.peek()]>=nums[i]) stack.pop();
+            if(!stack.isEmpty()){
+                nextSmaller[i] = stack.peek()+1;
+            }else{
+                nextSmaller[i] = 0;
+            }
+            stack.push(i);
+        }
+        stack = new Stack<>();
+        for(int i = n-1;i>=0;i--){
+            while(!stack.isEmpty()&&nums[stack.peek()]>=nums[i]) stack.pop();
+            if(!stack.isEmpty()){
+                preSmaller[i] = stack.peek()-1;
+            }else{
+                preSmaller[i] = n-1;
+            }
+            stack.push(i);
+        }
+        long res = Integer.MIN_VALUE;
+        for (int i = 0; i < n; ++i){
+            int left = nextSmaller[i];
+            int right = preSmaller[i];
+            long sum = preSum[right+1]-preSum[left];
+            res = Math.max(res, sum * nums[i]);
+        }
+        return (int) (res % 1000_000_007);
+    }
+  
+}
