@@ -1,0 +1,31 @@
+class Solution {
+    /*
+     i,j
+     max(arr[i]..arr[k]) * max(arr[k+1]..arr[j]) + dp(i, k) + dp(k+1, j)
+      0 1 2
+    0 6 
+    1   2 
+    2     4
+    */
+    public int mctFromLeafValues(int[] arr) {
+        int n = arr.length;
+        int[][] dp = new int[n][n];
+        return dfs(arr,0,n-1,dp);
+    }
+    
+    private int dfs(int[] arr,int s,int e,int[][] dp){
+        if(s==e) return 0;
+        int res = Integer.MAX_VALUE;
+        if(dp[s][e]>0) return dp[s][e];
+        for(int i = s;i<e;i++){
+            int left = dfs(arr,s,i,dp);
+            int right = dfs(arr,i+1,e,dp);
+            int leftMax = 0, rightMax = 0;
+            for(int j = s;j<=i;j++) leftMax = Math.max(leftMax,arr[j]);
+            for(int j = i+1;j<=e;j++) rightMax = Math.max(rightMax,arr[j]);
+            res = Math.min(res,left+right+leftMax*rightMax);
+        }
+        dp[s][e] = res;
+        return res;
+    }
+}
