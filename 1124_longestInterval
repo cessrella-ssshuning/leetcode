@@ -1,0 +1,32 @@
+class Solution {
+    /*
+    [6,6,6]
+   
+    */
+    public int longestWPI(int[] hours) {
+        int[] preSum = new int[hours.length+1];
+        int sum = 0;
+        for(int i = 1;i<=hours.length;i++){
+            if(hours[i-1]<=8){
+                sum +=-1; 
+            }else{
+                sum +=1;
+            }
+            preSum[i] = sum;
+        }
+        Stack<Integer> stack = new Stack<>();
+        for(int i = 0;i<preSum.length;i++){
+            if(stack.isEmpty()||preSum[i]<preSum[stack.peek()]){
+                stack.push(i);
+            }
+        }
+        int res = 0;
+        for(int i = preSum.length-1;i>=0;i--){
+            while(!stack.isEmpty()&&preSum[stack.peek()]<preSum[i]){
+                res = Math.max(res,i-stack.pop());
+            }
+        }
+        return res;
+        
+    }
+}
