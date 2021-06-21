@@ -1,0 +1,24 @@
+class Solution {
+    public int[] mostCompetitive(int[] nums, int k) {
+        int[] res = new int[k];
+        int maxToThrow = nums.length-k;
+        int toThrow = 0;
+        Stack<Integer> stack = new Stack<>();
+        for(int i = 0;i<nums.length;i++){
+            while(!stack.isEmpty()&&stack.peek()>nums[i]&&toThrow<maxToThrow){
+                stack.pop();
+                toThrow++;
+            }
+            if(stack.isEmpty()||stack.peek()<=nums[i]||toThrow>=maxToThrow){
+                stack.push(nums[i]);
+            }
+        }
+        while(stack.size()>k){
+            stack.pop();
+        }
+        for(int i = stack.size()-1;i>=0;i--){
+            res[i] = stack.pop();
+        }
+        return res;
+    }
+}
