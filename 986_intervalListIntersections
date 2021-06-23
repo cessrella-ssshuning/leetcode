@@ -1,0 +1,43 @@
+class Solution {
+    /*
+    - - -     - - - - - -    - - - - - - - - - - - - - 
+      - - - - -     - - - - -    - - - - - - - - - - - -
+    0,1,5,8,13,15,24
+    2 5 20 23 24 25 26
+    
+    */
+    public int[][] intervalIntersection(int[][] firstList, int[][] secondList) {
+        
+        List<int[]> resList = new ArrayList<>();
+        int i = 0,j = 0;
+        while(i<firstList.length&&j<secondList.length){
+            int stA = firstList[i][0];
+            int stB = secondList[j][0];
+            int endA = firstList[i][1];
+            int endB = secondList[j][1];
+           // System.out.println(stA+","+endA+","+stB+","+endB);
+            if(stB>endA){
+                i++;
+            }else if(stA>endB){
+                j++;
+            }else{
+                //stA- - -endA
+                //  stB- - -endB
+                int st = Math.max(stA,stB);
+                //    stA- - -endA
+                //stB- - -endB
+                int end = Math.min(endA,endB);
+                
+                resList.add(new int[]{st,end});
+                if(endA<endB) i++;
+                else j++;
+            }
+        }
+       
+        int[][] res = new int[resList.size()][2];
+        for(int k = 0;k<resList.size();k++){
+            res[k] = resList.get(k);
+        }
+        return res;
+    }
+}
