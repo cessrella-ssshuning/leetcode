@@ -1,0 +1,40 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    /** @param head The linked list's head.
+        Note that the head is guaranteed to be not null, so it contains at least one node. */
+    ListNode h;
+    Random rd;
+    public Solution(ListNode head) {
+        rd = new Random();
+        h = head;
+    }
+    
+    /** Returns a random node's value. */
+    public int getRandom() {
+        int res = 0;
+        int num = 0;
+        int count = 0;
+        ListNode node = h;
+
+        while(node!=null){
+            count++;
+            num = rd.nextInt(count); 
+            if(num==count-1){// one of the 1/num possibility
+                res = node.val;
+            }//1/count possibility to be replaced
+            node = node.next;
+        }
+        return res;
+
+    }
+}
