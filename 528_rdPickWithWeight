@@ -1,0 +1,41 @@
+class Solution {
+    /*
+         [1,3]
+    w [1,4]
+    nums [1,4]
+         [1,1][2,3,4]
+               ^
+    [0,4)+1
+      st   1
+      end  1
+      mid  1
+      nums[1] = 4>2
+      end = 2
+    */
+    Random rd;
+    int[] nums;
+    public Solution(int[] w) {
+        nums = new int[w.length];
+        rd = new Random();
+        nums[0] = w[0];
+        for(int i = 1;i<w.length;i++){
+            nums[i] = nums[i-1]+w[i]; 
+        }
+    }
+    
+    public int pickIndex() {
+        int rdNum = rd.nextInt(nums[nums.length-1])+1;
+        int st = 0;
+        int end = nums.length-1;
+        while(st<end){
+            int mid = st+(end-st)/2;
+            if(rdNum==nums[mid]) return mid;
+            else if(nums[mid]<rdNum){
+                st = mid+1;
+            }else{
+                end = mid;
+            }
+        }
+        return st;
+    }
+}
