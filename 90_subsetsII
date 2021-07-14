@@ -1,0 +1,27 @@
+class Solution {
+    List<List<Integer>> res;
+    Set<List<Integer>> set;
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        res = new ArrayList<>();
+        Arrays.sort(nums);
+        set = new HashSet<>();
+        for(int i = 0;i<=nums.length;i++){
+            dfs(nums,0,new ArrayList<>(),i);
+        }
+        return new ArrayList<>(set);
+        
+    }
+    private void dfs(int[] nums,int index,List<Integer> list,int size){
+        if(index>nums.length) return;
+        if(list.size()==size){
+            set.add(new ArrayList<>(list));
+            return;
+        }
+        for(int i = index;i<nums.length;i++){
+          //  if(i>0&&nums[i]==nums[i-1]) continue; This is to handle duplicate elements not duplicate subsets
+            list.add(nums[i]);
+            dfs(nums,i+1,list,size);
+            list.remove(list.size()-1);
+        }
+    }
+}
