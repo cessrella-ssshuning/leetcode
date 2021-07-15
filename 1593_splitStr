@@ -1,0 +1,22 @@
+class Solution {
+    Set<String> set;
+    public int maxUniqueSplit(String s) {
+        set = new HashSet<>();
+        return dfs(s,0);
+    }
+    private int dfs(String s,int index){
+       
+        if(index>=s.length()) return 0;
+         int res = -1;
+          for(int i = index+1;i<=s.length();i++){
+              String sub = s.substring(index,i);
+              if(set.contains(sub)) continue;
+              set.add(sub);
+              int tmpRes = dfs(s,i);
+              if(tmpRes>=0) res = Math.max(res,tmpRes+1);
+              set.remove(sub);
+          } 
+        
+        return res;
+    }
+}
