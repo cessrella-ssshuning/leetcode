@@ -1,0 +1,56 @@
+class Solution {
+    /*
+    [2,4,2]
+    [2,2,4]
+    [4,2,2]
+    [4,2,2]
+    [2,4,2]
+    [2,2,4]
+    list{{2,2}{2,2}{2,2}}
+    */
+    List<List<Integer>> list;
+    int res;
+    int[] visited;
+    int[] nums;
+    public int numSquarefulPerms(int[] nums) {
+        res = 0;
+        this.nums = nums;
+        list = new ArrayList<>();
+        visited = new int[nums.length];
+        Arrays.sort(nums);
+        for(int i = 0;i<nums.length;i++){
+            list.add(new ArrayList<>());
+            for(int j = 0;j<nums.length;j++){
+                if(i==j) continue;
+                if(Math.sqrt(nums[i]+nums[j])==(int)(Math.sqrt(nums[i]+nums[j]))){
+                    list.get(i).add(j);
+                }
+            }
+           
+        }
+        for(int i = 0;i<nums.length;i++){
+            if(i>0&&nums[i]==nums[i-1]) continue;//handle duplicates for the first element
+            visited[i] = 1;
+            dfs(i,1);
+            visited[i] = 0;
+        }
+        return res;
+    }
+    private void dfs(int index,int count){
+        if(count==list.size()){
+            res++;
+            return;
+        }
+        int last = -1;
+        for(int i = 0;i<list.get(index).size();i++){
+            int tmp = list.get(index).get(i);
+            if(visited[tmp]==1) continue;
+            if(nums[tmp]==last) continue;//handle duplicated for following elements
+            visited[tmp] = 1;
+            last = nums[tmp];
+            dfs(list.get(index).get(i),count+1);
+            visited[tmp] = 0;     
+        }
+    }
+    
+}
