@@ -1,0 +1,53 @@
+class Solution {
+    /*
+    1,1,2,2,3,3,6,8
+    
+    */
+    int res;
+    int[] visited;
+    int k;
+    public int minimumIncompatibility(int[] nums, int k) {
+        res = Integer.MAX_VALUE;
+        this.k = k;
+        Map<Integer,Integer> map = new HashMap<>();
+        visited = new int[nums.length];
+        for(int i = 0;i<nums.length;i++){
+            map.put(nums[i],map.getOrDefault(nums[i],0)+1);
+        }
+        for(Map.Entry<Integer,Integer> entry:map.entrySet()){
+            if(entry.getValue()>k) return -1;
+        }
+        Arrays.sort(nums);
+        visited[0] = 1;
+        dfs(nums,0,1,nums[0],nums[0],0);
+        return res;
+    }
+    private void dfs(int[] nums,int curIdx,int count,int min,int max,int sumIncmp){
+        if(count==nums.length/k){
+            int j = 0;
+            while(j<nums.length&&visited[j]==1){
+                j++;   
+            }
+            if(j==nums.length){
+                res = Math.min(res,sumIncmp+max-min);
+                return;
+            }else{
+                visited[j] = 1;
+                dfs(nums,j,1,nums[j],nums[j],sumIncmp+max-min);
+                visited[j] = 0;
+            }
+        }else{
+            int last = -1;
+            for(int i = curIdx+1;i<nums.length;i++){
+                if(visited[i]==1) continue;
+                if(nums[i]==nums[curIdx]) continue;
+                if(last!=-1&&nums[i]==last) continue;
+                visited[i] = 1;
+                dfs(nums,i,count+1,min,nums[i],sumIncmp);
+                last = nums[i];
+                visited[i] = 0;
+            }
+        }
+        
+    }
+}
