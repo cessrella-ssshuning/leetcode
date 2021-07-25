@@ -1,0 +1,74 @@
+class Solution {
+    /*
+    [[1,0,1],[1,1,1]]
+    [[0,0],[0,2],[1,1]]
+      -1  0  2
+      2   2  2
+      
+    */
+    int[] res;
+    int[][] dirs = {{1,0},{-1,0},{0,1},{0,-1}};
+    public int[] hitBricks(int[][] grid, int[][] hits) {
+        res = new int[hits.length];
+        //set hits bricks to -1;if 0 then 0, if 1 then -1
+        for(int[] hit:hits){
+            if(grid[hit[0]][hit[1]]==1)
+                grid[hit[0]][hit[1]] = -1;
+        }
+       
+        //set bricks attached to roof as 2
+        for(int i = 0;i<grid[0].length;i++){
+            if(grid[0][i]==1)
+                dfs(0,i,grid);
+        }
+        // for(int i = 0;i<grid.length;i++){
+        //     for(int j = 0;j<grid[i].length;j++){
+        //         System.out.print(grid[i][j]);
+        //     }
+        //     System.out.println();
+        // }
+      
+        for(int i = hits.length-1;i>=0;i--){
+            int x = hits[i][0];
+            int y = hits[i][1];
+            if(grid[x][y]==0){//hit no bricks
+                res[i] = 0;
+            }else{
+                grid[x][y] = 1;//时光倒流，恢复到被hit之前
+                if(connectCeil(x,y,grid)){
+                    res[i] = dfs(x,y,grid)-1;
+                }   
+            }
+                  
+        }
+ 
+        return res;
+        
+    }
+    private int dfs(int row,int col,int[][] grid){
+        int count = 1;
+        grid[row][col] = 2;
+        for(int[] dir:dirs){
+            int i = row+dir[0];
+            int j = col+dir[1];
+            if(i<0||i>=grid.length||j<0||j>=grid[i].length) continue;
+            if(grid[i][j]==1){// count in every connected suspending bricks
+                count += dfs(i,j,grid);
+            }
+        }
+        return count;
+    }
+    private boolean connectCeil(int row,int col,int[][] grid){
+        boolean connectCeil = (row==0);
+        for(int[] dir:dirs){
+            int i = row + dir[0];
+            int j = col + dir[1];
+            if(i<0||i>=grid.length||j<0||j>=grid[row].length) continue;
+            if(grid[i][j]==2){//once one of surrounding brick is 2
+                connectCeil = true;
+                break;
+            }     
+        }
+        return connectCeil;
+    }
+}
