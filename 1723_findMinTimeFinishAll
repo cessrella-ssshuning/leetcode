@@ -1,0 +1,40 @@
+class Solution {
+    int n;
+    public int minimumTimeRequired(int[] jobs, int k) {
+        n = jobs.length;
+        int left = jobs[n-1];
+        int right = 0;
+        for(int i = 0;i<n;i++){
+            right += jobs[i];
+        }
+        Arrays.sort(jobs);
+        int[] workers = new int[k];
+        while(left+1<right){
+            int mid = left+(right-left)/2;
+            workers = new int[k];
+            if(dfs(jobs,mid,n-1,workers)){
+                right = mid;
+            }else{
+               left = mid+1; 
+            }
+        }
+        workers = new int[k];
+        if(dfs(jobs,left,n-1,workers)) return left;
+        else return right;
+    }
+    private boolean dfs(int[] jobs,int th,int num,int[] workers){
+        if(num==-1) return true;
+        int flag = 0;
+        for(int i = 0;i<workers.length;i++){
+            if(workers[i]+jobs[num]>th) continue;
+            if(workers[i]==0){
+                if(flag==1) continue;//the same task ever assigned to similar workers with no tasks
+                flag = 1;
+            }
+            workers[i] += jobs[num];
+            if(dfs(jobs,th,num-1,workers)) return true;
+            workers[i] -= jobs[num];
+        }
+        return false;
+    }
+}
