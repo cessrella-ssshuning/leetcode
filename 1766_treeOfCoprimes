@@ -1,0 +1,65 @@
+class Solution {
+    List<Integer> path;//path[i] is the i-th node index along the dfs path
+    List<Integer>[] records;//records[i] contains depth of all the nodes whose num = i
+    int[] res;
+    List<Integer>[] next;
+    int[] visited;
+    int[] nums;
+    public int[] getCoprimes(int[] nums, int[][] edges) {
+        int n = nums.length;
+        this.nums = nums;
+        res = new int[n];
+        visited = new int[100000];
+        Arrays.fill(res,-1);
+        next = new ArrayList[n];
+        records = new ArrayList[51];
+        path = new ArrayList<>();
+        for(int[] edge:edges){
+            if(next[edge[0]]==null) next[edge[0]] = new ArrayList<>();
+            if(next[edge[1]]==null) next[edge[1]] = new ArrayList<>();
+            next[edge[0]].add(edge[1]);
+            next[edge[1]].add(edge[0]);
+        }
+        visited[0]=1;
+        dfs(0,0);
+        
+        return res;       
+    }
+    private void dfs(int curIdx,int depth){
+        int i = -1;
+        for(int d = 1;d<=50;d++){
+            if(records[d]==null) records[d] = new ArrayList<>();
+            if(records[d].size()>0&&gcd(d,nums[curIdx])==1){
+                if(curIdx==0) System.out.println(records[d].get(records[d].size()-1));
+
+                i = Math.max(i,records[d].get(records[d].size()-1));
+            }
+        }
+        if(i!=-1) res[curIdx] = path.get(i);
+        
+        path.add(curIdx);
+        // if(records[nums[curIdx]]==null) records[nums[curIdx]] = new ArrayList<>();
+        records[nums[curIdx]].add(depth);
+        if(next[curIdx]!=null)
+            for(int nextIdx:next[curIdx]){
+
+                if(visited[nextIdx]==1) continue;
+                // if(curIdx==0) System.out.println(nextIdx);
+                visited[nextIdx] = 1;
+                dfs(nextIdx,depth+1);
+                visited[nextIdx] = 0;
+            }
+        path.remove(path.size()-1);
+        records[nums[curIdx]].remove(records[nums[curIdx]].size()-1);
+    }
+           
+    private int gcd(int n1, int n2) {
+        int gcd = 1;
+        for (int i = 2; i <= n1 && i <= n2; i++) {
+            if (n1 % i == 0 && n2 % i == 0) {
+                gcd = i;
+            }
+        }
+        return gcd;
+    }
+}
