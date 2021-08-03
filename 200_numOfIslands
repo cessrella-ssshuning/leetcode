@@ -1,0 +1,61 @@
+class Solution {
+   
+    public int numIslands(char[][] grid) {
+        int[][] dirs = new int[][]{{1,0},{-1,0},{0,1},{0,-1}};
+        UnionFind uf = new UnionFind(grid);
+        int col = grid[0].length;
+        int row = grid.length;
+        for(int i = 0;i<row;i++){
+            for(int j = 0;j<col;j++){
+                if(grid[i][j]=='1'){
+                    for(int[] dir:dirs){//can not use i and j inside this loop for i and j are changed after 
+                        int x = i+dir[0];
+                        int y = j+dir[1];
+        
+                        if(x>=0&&x<grid.length&&y>=0&&y<grid[0].length&&grid[x][y]=='1'){
+                            int id1 = i*col+j;
+                            int id2 = x*col+y;
+                            uf.union(id1,id2);
+                        }           
+                    }   
+                }
+            }
+        }
+        return uf.count;
+    }
+    class UnionFind{
+        int[] parents;
+        int count;
+        public UnionFind(char[][] grid){
+            int n = grid.length;
+            int m = grid[0].length;
+            parents = new int[m*n];
+            for(int i = 0;i<n;i++){
+                for(int j = 0;j<m;j++){
+                    if(grid[i][j]=='1'){
+                        int id = i*m+j;
+                        parents[id] = id;
+                        count++;
+                    }
+                    
+                }
+            }    
+        }
+        
+        private void union(int i,int j){
+            int parentI = findParent(i);
+            int parentJ = findParent(j);
+            if(parentI!=parentJ){
+                parents[parentI] = parentJ;//pay attention to this line
+                count--;
+            }
+        }
+       
+        private int findParent(int i){
+            if(parents[i]!=i){
+                parents[i] = findParent(parents[i]);
+            }
+            return parents[i];
+        }
+    }
+}
