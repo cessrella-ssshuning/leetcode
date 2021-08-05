@@ -1,0 +1,40 @@
+class Solution {
+    /*
+    rectSum[16,16+15]
+    */
+    Random rd;
+    int[] rectSum;
+    int[][] rects;
+    public Solution(int[][] rects) {
+        int sum = 0;
+        rectSum = new int[rects.length];
+        for(int i = 0;i<rects.length;i++){
+            sum += (rects[i][2]-rects[i][0]+1)*(rects[i][3]-rects[i][1]+1);
+            rectSum[i] = sum;
+        }
+        rd = new Random();
+        this.rects = rects;
+    }
+    
+    public int[] pick() {
+        int rdNum = rd.nextInt(rectSum[rects.length-1])+1;
+        
+        int idx = -1;
+        for(int i = 0;i<rectSum.length;i++){
+            if(idx!=-1&&rdNum<rectSum[i]){
+                break;
+            }
+            if(rdNum<=rectSum[i]) idx = i;
+        }
+        int[] rect = rects[idx];
+        int[] res = new int[2];
+        rdNum = idx==0?rdNum:rdNum-rectSum[idx-1];
+        int width = rect[2]-rect[0]+1;
+        int height = rect[3]-rect[1]+1;
+        int i = rd.nextInt(width);
+        int j = rd.nextInt(height);
+        res[0] = rect[0]+i;
+        res[1] = rect[1]+j;
+        return res;
+    }
+}
