@@ -1,0 +1,35 @@
+class Solution {
+    public boolean makesquare(int[] matchsticks) {
+        boolean[] dp = new boolean[matchsticks.length+1];
+        int sum = 0;
+        for(int matchStick: matchsticks){
+            sum += matchStick;
+        }
+        if(sum%4!=0) return false;
+        int target = sum/4;
+        //important improvement when coming into repeated elements
+        Arrays.sort(matchsticks);
+        int[] visited = new int[matchsticks.length];
+        return dfs(matchsticks,0,target,0,0,visited);
+        
+    }
+    private boolean dfs(int[] matchsticks,int curIdx,int target,int count,int curSum,int[] visited){
+        if(count==4) return true;
+        if(curSum>target) return false;
+        if(curSum==target){
+            return dfs(matchsticks,0,target,count+1,0,visited);
+        }
+        int last = -1;
+        for(int i = curIdx;i<matchsticks.length;i++){
+            if(visited[i]==1) continue;
+            if(matchsticks[i]==last) continue;
+            last = matchsticks[i];//去重
+            visited[i] = 1;
+            if(dfs(matchsticks,i+1,target,count,curSum+matchsticks[i],visited)){
+                return true;
+            }
+            visited[i] = 0;
+        }
+        return false;  
+    }
+}
