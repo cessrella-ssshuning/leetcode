@@ -1,0 +1,16 @@
+class Solution extends SolBase {
+    public int rand10() {
+        int base7 = getBase();
+        //0-66 -> 0-48 ->0-39
+        while(base7>39){
+            base7 = getBase();
+        }
+        return base7%10+1;
+    }
+    private int getBase(){
+        int a = rand7()-1;
+        int b = rand7()-1;
+        int base7 = a*7+b;
+        return base7;
+    }
+}
