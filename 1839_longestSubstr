@@ -1,0 +1,21 @@
+class Solution {
+    public int longestBeautifulSubstring(String word) {
+        if(word.length()<5) return 0;
+
+        int st = -1,end = 0;
+        int res = 0;
+        Set<Character> seen = new HashSet<>();
+        while(st<end&&end<word.length()){
+            if(end>0&&word.charAt(end-1)>word.charAt(end)){
+                seen = new HashSet<>();
+                st = end - 1;
+            }
+            seen.add(word.charAt(end));
+            if(seen.size()>=5)
+                res = Math.max(res,end-st);
+            end++;
+        }
+        return res;
+        
+    }
+}
