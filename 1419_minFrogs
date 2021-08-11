@@ -1,0 +1,35 @@
+class Solution {
+    /*
+    "crcoakroak"
+              ^
+              最多有多少同时并行的frog
+    */
+    public int minNumberOfFrogs(String croakOfFrogs) {
+        if(croakOfFrogs.length()%5!=0) return -1;
+        int c = 0,r = 0, o = 0, a = 0,res = 0;
+        for(int i = 0;i<croakOfFrogs.length();i++){
+            char ch = croakOfFrogs.charAt(i);
+            if(ch=='c'){
+                c++;
+            }else if(ch=='r'){
+                c--;
+                r++;
+                if(c<0) return -1;
+            }else if(ch=='o'){
+                r--;
+                o++;
+                if(r<0) return -1;
+            }else if(ch=='a'){
+                o--;
+                a++;
+                if(o<0) return -1;
+            }else if(ch=='k'){
+                a--;
+                if(a<0) return -1;
+            }
+            res = Math.max(res,c+r+o+a);
+        }
+        
+        return res;
+    }
+}
