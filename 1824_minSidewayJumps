@@ -1,0 +1,38 @@
+class Solution {
+    /*
+    [0,1,2,3,0]
+    dp[0][0] 
+    dp[0][1]
+    */
+    public int minSideJumps(int[] obstacles) {
+        int n = obstacles.length;
+        int[][] dp = new int[n][3];
+        dp[0][1] = 0;
+        dp[0][2] = 1;
+        dp[0][0] = 1;
+        for(int i = 1;i<n;i++){
+            int obs = obstacles[i];
+            int min = Integer.MAX_VALUE;
+            for(int j = 0;j<3;j++){
+                if(obs == j+1){
+                    dp[i][j] = Integer.MAX_VALUE;
+                }else{
+                    dp[i][j] = dp[i-1][j];
+                }
+                min = Math.min(min,dp[i][j]);
+            }
+            for(int j = 0;j<3;j++){
+                if(obs != j+1)
+                    dp[i][j] = Math.min(min+1,dp[i][j]);
+            }
+        }
+        int res = 0;
+        if(dp[n-1][0]!=Integer.MAX_VALUE&&dp[n-1][1]!=Integer.MAX_VALUE){
+            res = Math.min(dp[n-1][0],dp[n-1][1]);
+        }
+        if(dp[n-1][2]!=Integer.MAX_VALUE){
+            res = Math.min(dp[n-1][2],res);
+        }
+        return res;
+    }
+}

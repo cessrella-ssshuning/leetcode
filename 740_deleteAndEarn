@@ -1,0 +1,37 @@
+class Solution {
+    /*
+    [2,2,3,3,3,4]
+    [2,2]
+    [3,3]
+    [4,1]   
+    */
+    public int deleteAndEarn(int[] nums) {
+        Arrays.sort(nums);
+        Map<Integer,Integer> map = new HashMap<>();
+        for(int num:nums){
+            map.put(num,map.getOrDefault(num,0)+1);
+        }
+        int[][] pairs = new int[map.size()][2];
+        int j = 0;
+        for(int k = 0;k<nums.length;k++){
+            if(k>0&&nums[k]==nums[k-1]) continue;
+            pairs[j][0] = nums[k];
+            pairs[j][1] = map.get(nums[k]);
+            j++;
+        }
+        int p = pairs[0][0]*pairs[0][1],q = 0;
+        for(int i = 1;i<pairs.length;i++){
+            int temp_p = p,temp_q = q;
+            if(pairs[i][0]-1!=pairs[i-1][0]){
+                p = Math.max(temp_p,temp_q)+pairs[i][0]*pairs[i][1];
+                q = Math.max(temp_p,temp_q);
+            }else{
+                p = temp_q+pairs[i][0]*pairs[i][1];
+                q = Math.max(temp_p,temp_q);
+            }    
+        }
+        return Math.max(p,q);
+        
+        
+    }
+}
