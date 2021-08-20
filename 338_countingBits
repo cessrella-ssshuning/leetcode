@@ -1,0 +1,17 @@
+class Solution {
+    /*
+    0 --> 0
+    1 --> 1 0
+    2 --> 10 01
+    3 --> 11 01
+    4 --> 100 010
+    5 --> 101 010
+    */
+    public int[] countBits(int n) {
+        int[] res = new int[n+1];
+        for(int i = 1;i<=n;i++){
+            res[i] = res[i>>1]+(i&1);
+        }
+        return res;
+    }
+}
