@@ -1,0 +1,47 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Codec {
+
+    // Encodes a tree to a single string.
+    public String serialize(TreeNode root) {//搞成preorder traversal得到唯一的树
+        StringBuilder sb = new StringBuilder();
+        buildHelper(sb,root);
+        return sb.toString();
+    }
+    private void buildHelper(StringBuilder sb, TreeNode root){
+        if(root==null){
+            sb.append("#,");
+        }else{
+            sb.append(root.val);
+            sb.append(",");
+            buildHelper(sb,root.left);
+            buildHelper(sb,root.right);
+        }
+    }
+
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+        String[] nodes = data.split(",");
+        Deque<String> dq = new ArrayDeque<>();
+        dq.addAll(Arrays.asList(nodes));
+       
+        return helper(dq);
+    }
+    private TreeNode helper(Deque<String> dq){
+        String num = dq.remove();
+        if(num.equals("#")) return null;
+        else{
+            TreeNode node = new TreeNode(Integer.parseInt(num));
+            node.left = helper(dq);
+            node.right = helper(dq);
+            return node;
+        }
+    }
+}
