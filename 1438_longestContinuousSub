@@ -1,0 +1,43 @@
+class Solution {
+    /*
+    注意之前priorityqueue 的错误，假设nums[8]2是最小值，nums[11]87最大，nums[6]=3 second minimum
+    但是跳出循环的时候虽然2被弹出，但是3没弹出来 但是3并不是最小值
+    [8,2,4,7]
+     0 1 2 3
+       ^
+           ^
+     d1 ()
+     d2 (2,4,7)
+    */
+    public int longestSubarray(int[] nums, int limit) {
+        int st = 0,end = 0;
+        int max = Integer.MIN_VALUE,min = Integer.MAX_VALUE;
+        int res = 0;
+        Deque<Integer> d1 = new ArrayDeque<>();//increasing order
+        Deque<Integer> d2 = new ArrayDeque<>();//descending order
+        while(st<=end&&end<nums.length){
+            
+            while(!d1.isEmpty()&&d1.peekLast()>nums[end]) d1.pollLast();
+            while(!d2.isEmpty()&&d2.peekLast()<nums[end]) d2.pollLast();
+            d1.offer(nums[end]);
+            d2.offer(nums[end]);
+            max = d2.peek();
+            min = d1.peek();
+            if(max-min<=limit){
+                res = Math.max(res,end-st+1);
+            }else{
+                while(max-min>limit&&st<end){
+                    
+                    if(max==nums[st]) d2.poll();
+                    if(min==nums[st]) d1.poll();
+                    max = d2.peek();
+                    min = d1.peek();
+                    st++;
+                } 
+            }
+            end++;
+        }
+        return res;
+        
+    }
+}
