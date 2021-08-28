@@ -1,0 +1,53 @@
+class Solution {
+    /*
+    [[1,3],[2,0],[5,10],[6,-10]]
+    yi + yj + |xi - xj| 
+    when i<j,xi<xj 注意是i<j所以只能是对于给定的j，因为在循环的时候，pq里已经存了之前的yi-xi这个时候才满足i<j
+    = yi+yj+xj-xi
+    = xj+yj+(yi-xi) max
+    pq{(2,1)(-2,2)--(5,5)}//符合范围内的最大值已经能全都算过了所以poll掉
+    */
+    public int findMaxValueOfEquation(int[][] points, int k) {
+        Deque<Integer> dq = new LinkedList<>();
+        int res = Integer.MIN_VALUE;
+        int i = 0;
+        for(int[] point:points){
+            while(!dq.isEmpty()&&point[0]-points[dq.peek()][0]>k){
+                dq.poll();
+            }
+            if(!dq.isEmpty()){
+                res = Math.max(res,points[dq.peek()][1]-points[dq.peek()][0]+point[0]+point[1]);
+            }
+            while(!dq.isEmpty()&&points[dq.getLast()][1]-points[dq.getLast()][0]<-point[0]+point[1]){
+                dq.pollLast();
+            }
+            dq.offer(i++);
+        }
+        return res;
+        
+    }
+}
+class Solution {
+    /*
+    [[1,3],[2,0],[5,10],[6,-10]]
+    yi + yj + |xi - xj| 
+    when i<j,xi<xj
+    = yi+yj+xj-xi
+    = xj+yj+(yi-xi) max
+    */
+    public int findMaxValueOfEquation(int[][] points, int k) {
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a,b)->a[0]==b[0]?a[1]-b[1]:b[0]-a[0]);
+        int res = Integer.MIN_VALUE;
+        for(int[] point:points){
+            while(!pq.isEmpty()&&point[0]-pq.peek()[1]>k){
+                pq.poll();
+            }
+            if(!pq.isEmpty()){
+                res = Math.max(res,pq.peek()[0]+point[0]+point[1]);
+            }
+            pq.offer(new int[]{point[1]-point[0],point[0]});
+        }
+        return res;
+        
+    }
+}
