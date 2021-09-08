@@ -1,0 +1,54 @@
+class Solution {
+    public int minimumHammingDistance(int[] source, int[] target, int[][] allowedSwaps) {
+        UnionFind uf = new UnionFind(target.length);
+        for(int[] swap:allowedSwaps){
+            uf.union(swap[0],swap[1]);
+        }
+        Map<Integer,Map<Integer,Integer>> map = new HashMap<>();
+        for(int i = 0;i<source.length;i++){
+            int num = source[i];
+            int root = uf.findParents(i);
+            map.putIfAbsent(root,new HashMap<>());
+            Map<Integer,Integer> components = map.get(root);
+            components.put(num,components.getOrDefault(num,0)+1);
+        }
+        int res = 0;
+        for(int j = 0;j<target.length;j++){
+            int num = target[j];
+            int root = uf.findParents(j);
+            Map<Integer,Integer> components = map.get(root);
+            System.out.print(root+":");
+            for(Map.Entry<Integer,Integer> entry:components.entrySet()){
+                System.out.print(entry.getKey()+","+entry.getValue()+";");
+            }
+            System.out.println();
+            if(components.getOrDefault(num,0)==0) res++;
+            else components.put(num,components.get(num)-1);
+        }
+        return res;
+    }
+    class UnionFind{
+        int[] parents;
+        int count;
+        public UnionFind(int n){
+            parents = new int[n];
+            for(int i = 0;i<n;i++){
+                parents[i] = i;
+            }
+            count = n;
+        }
+        public void union(int i,int j){
+            int pI = findParents(i);
+            int pJ = findParents(j);
+            if(pI!=pJ){
+                parents[pJ] = pI;
+                count--;
+            }
+        }
+        private int findParents(int i){
+            if(parents[i]==i) return i;
+            parents[i] = findParents(parents[i]);
+            return parents[i];
+        }
+    }
+}
