@@ -1,0 +1,73 @@
+class Solution {
+    class UnionFind{
+        int[] parents;
+        public UnionFind(int n){
+            parents = new int[n];
+            for(int i = 0;i<n;i++){
+                parents[i] = i;
+            }
+        }
+        public void union(int i,int j){
+            int pI = findParents(i);
+            int pJ = findParents(j);
+            if(pI!=pJ){
+                parents[pJ] = pI;
+            }
+        }
+        public boolean find(int i,int j){
+            return findParents(i)==findParents(j);
+        }
+        
+        private int findParents(int i){
+            if(parents[i]==i) return i;
+            parents[i] = findParents(parents[i]);
+            return parents[i];
+        }
+    }
+    public int latestDayToCross(int row, int col, int[][] cells) {
+        int m = row;
+        int n = col;
+        int[][] dirs = new int[][]{{0,1},{0,-1},{1,0},{-1,0}};
+        UnionFind uf = new UnionFind(m*n+2);
+        int[][] matrix = new int[row][col];
+        for(int[] cell:cells){
+            matrix[cell[0]-1][cell[1]-1]=1;
+        }
+        for(int i = 0;i<n;i++){
+            uf.union(m*n,0*n+i);
+        }
+        for(int j = 0;j<n;j++){
+            uf.union(m*n+1,(m-1)*n+j);
+        }
+        for(int i = 0;i<m;i++){
+            for(int j = 0;j<n;j++){
+                if(matrix[i][j]==1) continue;
+                for(int[] dir:dirs){
+                    int x = dir[0]+i;
+                    int y = dir[1]+j;
+                    if(x<0||x>=m||y<0||y>=n) continue;
+                    if(matrix[x][y]==1) continue;
+                    uf.union(i*n+j,x*n+y);
+                }
+            }
+        }
+        
+        for(int i = cells.length-1;i>=0;i--){
+            int x = cells[i][0]-1;
+            int y = cells[i][1]-1;
+            matrix[x][y]=0;
+            if(uf.find(m*n,m*n+1)) return i+1;
+            
+            for(int[] dir:dirs){
+                int p = dir[0]+x;
+                int q = dir[1]+y;
+                if(p<0||p>=m||q<0||q>=n) continue;
+                if(matrix[p][q]==1) continue;
+                uf.union(x*n+y,p*n+q);
+            }
+               
+        }
+        return 0;
+    }
+     
+}
