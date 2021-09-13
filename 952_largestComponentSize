@@ -1,0 +1,59 @@
+class Solution {
+    class UnionFind{
+        int[] parents;
+        int max;
+        int[] size;
+        public UnionFind(int n){
+            parents = new int[n];
+            size = new int[n];
+            max = 1;
+            for(int i = 0;i<n;i++){
+                parents[i] = i;
+                size[i] = 1;
+            }
+        }
+        public void union(int i,int j){
+            int pI = findParents(i);
+            int pJ = findParents(j);
+            if(pI!=pJ){
+                parents[pJ] = pI;
+                size[pI] += size[pJ];
+                max = Math.max(max,size[pI]);
+            }
+        }
+        private int findParents(int i){
+            if(parents[i]==i) return i;
+            parents[i] = findParents(parents[i]);
+            return parents[i];
+        }
+    }
+    public int largestComponentSize(int[] nums) {
+        UnionFind uf = new UnionFind(nums.length);
+        Map<Integer,Integer> map = new HashMap<>();
+        for(int i = 0;i<nums.length;i++){
+            int num = nums[i];
+            for(int j = 2;j*j<=num;j++){
+                if(num%j==0){
+                    if(!map.containsKey(j)){
+                        map.put(j,i);
+                    }else{
+                        uf.union(i,map.get(j));
+                    }
+                    if(!map.containsKey(num/j)){
+                        map.put(num/j,i);
+                    }else{
+                        uf.union(i,map.get(num/j));
+                    }
+                }
+                
+            }
+            if(!map.containsKey(num)){
+                map.put(num,i);
+            }else{
+                uf.union(i,map.get(num));
+            }
+        }
+        return uf.max;
+    }
+    
+}
