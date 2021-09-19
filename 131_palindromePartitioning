@@ -1,0 +1,31 @@
+class Solution {
+    List<List<String>> res;
+    public List<List<String>> partition(String s) {
+        res = new ArrayList<>();
+        dfs(0,s,new ArrayList<>());
+        return res;
+    }
+    private void dfs(int index,String s,List<String> list){
+        if(index==s.length()){
+            res.add(new ArrayList<>(list));
+            return;
+        }
+        for(int i = index+1;i<=s.length();i++){
+            String p = s.substring(index,i);
+            if(isValid(p)){
+                list.add(p);
+                dfs(i,s,list);
+                list.remove(list.size()-1);
+            }
+        }        
+    }
+    private boolean isValid(String s){
+        int st = 0,end = s.length()-1;
+        while(st<=end){
+            if(s.charAt(st)!=s.charAt(end)) return false;
+            st++;
+            end--;
+        }
+        return true;
+    }
+}

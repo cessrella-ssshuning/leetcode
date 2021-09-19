@@ -1,0 +1,28 @@
+class Solution {
+    // 1,1,2,5,6,7,10
+    // 0 1 2 3 4 5 6
+    //         ^
+    // 1,1,6
+    // target 1
+    Set<List<Integer>> set;
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        set = new HashSet<>();
+        dfs(candidates,target,new ArrayList<>(),0);
+        return new ArrayList<>(set);
+    }
+    private void dfs(int[] candidates,int target,List<Integer> list,int index){
+        if(target<0) return;
+        if(target==0){
+            set.add(new ArrayList<>(list));
+            return;
+        }
+        for(int i = index;i<candidates.length;i++){
+            if(i!=index&&candidates[i]==candidates[i-1]) continue;//见discussion图示
+            list.add(candidates[i]);
+            dfs(candidates,target-candidates[i],list,i+1);
+            list.remove(list.size()-1);
+        }
+        
+    }
+}
