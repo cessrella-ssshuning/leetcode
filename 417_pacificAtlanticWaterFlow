@@ -1,0 +1,38 @@
+class Solution {
+    public List<List<Integer>> pacificAtlantic(int[][] matrix) {
+        List<List<Integer>> list = new ArrayList<>();
+        int m = matrix.length;
+        int n = matrix[0].length;
+        boolean[][] pacific = new boolean[m][n];
+        boolean[][] atlantic = new boolean[m][n];
+        
+        for(int col = 0;col<n;col++){
+            dfs(matrix,pacific,matrix[0][col],0,col);
+            dfs(matrix,atlantic,matrix[m-1][col],m-1,col);
+        }
+        for(int row = 0;row<m;row++){
+            dfs(matrix,pacific,matrix[row][0],row,0);
+            dfs(matrix,atlantic,matrix[row][n-1],row,n-1);
+        }
+        for(int i = 0;i<m;i++){
+            for(int j = 0;j<n;j++){
+                if(pacific[i][j]&&atlantic[i][j]){
+                    List<Integer> cur = new ArrayList<>();
+                    cur.add(i);
+                    cur.add(j);
+                    list.add(cur);
+                }
+            }
+        }
+        return list;
+    }
+    int[][] dirs = new int[][]{{0,1},{1,0},{0,-1},{-1,0}};
+    private void dfs(int[][] matrix,boolean[][] ocean,int preHeight,int r,int c){
+        if(r<0||r>=matrix.length||c<0||c>=matrix[0].length||ocean[r][c]||matrix[r][c]<preHeight) return;
+        ocean[r][c] = true;
+       
+        for(int dir[]:dirs){
+            dfs(matrix,ocean,matrix[r][c],r+dir[0],c+dir[1]);
+        }
+    }
+}

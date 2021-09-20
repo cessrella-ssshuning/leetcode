@@ -1,0 +1,32 @@
+class Solution {
+    
+    int target;
+    List<String> list;
+    public List<String> addOperators(String num, int target) {
+        this.target = target;
+        list = new ArrayList<>();
+        dfs(num,0,"",0l,0l);
+        return list;
+    }
+    private void dfs(String num,int curPos,String preString,long preVal,long lastVal){
+        if(curPos==num.length()){
+            if(preVal==target){
+                list.add(preString);
+                return;
+            }
+        }
+        for(int i = curPos+1;i<=num.length();i++){
+            String curString  = num.substring(curPos,i);
+            if(curString.length()>1&&curString.charAt(0)=='0') continue;
+            long curVal = Long.parseLong(curString);
+            if(curPos==0){
+                dfs(num,i,curString,curVal,curVal);
+            }else{
+                dfs(num,i,preString+"+"+curString,preVal+curVal,curVal);
+                dfs(num,i,preString+"-"+curString,preVal-curVal,-curVal);
+                dfs(num,i,preString+"*"+curString,preVal-lastVal+lastVal*curVal,lastVal*curVal);
+            }
+            
+        }
+    }
+}
