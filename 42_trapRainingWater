@@ -1,0 +1,49 @@
+class Solution {
+    // [0,1,0,2,1,0,1,3,2,1,2,1]
+    //              ^
+    // stack(3,4)
+    // cur 5
+    // res 1
+    // keep descending order in stack
+    public int trap(int[] height) {
+        int res = 0;
+        Stack<Integer> stack = new Stack<>();
+        for(int i = 0;i<height.length;i++){
+            if(stack.isEmpty()) stack.push(i);
+            else{
+                while(!stack.isEmpty()&&height[stack.peek()]<height[i]){
+                    int cur = stack.pop();
+                    if(!stack.isEmpty()){
+                        int high = Math.min(height[stack.peek()],height[i])-height[cur];
+                        int len = i-stack.peek()-1;
+                        res += high*len;
+                    }
+
+                }
+                stack.push(i);
+            }
+        }
+        return res;
+    }
+}
+class Solution {
+    public int trap(int[] height) {
+        int n = height.length;
+        int[] leftMost = new int[n];
+        int[] rightMost = new int[n];
+        leftMost[0] = height[0];
+        for(int i = 1;i<n;i++){
+            leftMost[i] = Math.max(leftMost[i-1],height[i]);
+        }
+        rightMost[n-1] = height[n-1];
+        for(int j = n-2;j>=0;j--){
+            rightMost[j] = Math.max(rightMost[j+1],height[j]);
+        }
+        int res = 0;
+        for(int i = 0;i<n;i++){
+            int area = Math.min(leftMost[i],rightMost[i])-height[i];
+            res += area>0?area:0;
+        }
+        return res;
+    }
+}

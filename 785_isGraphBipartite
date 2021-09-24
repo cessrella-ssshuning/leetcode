@@ -1,0 +1,25 @@
+class Solution {
+//     [[1],[0],[4],[4],[2,3]]
+    
+//     0  1 2 3 4
+//     1 -1
+    public boolean isBipartite(int[][] graph) {
+        int[] colors = new int[graph.length];
+        
+        for(int i = 0;i<graph.length;i++){
+            if(colors[i]==0) colors[i] = 1;
+            if(!dfs(graph,i,colors)) return false;
+        }
+        return true;
+    }
+    private boolean dfs(int[][] graph,int curNode,int[] colors){
+    
+        for(int node:graph[curNode]){
+            if(colors[node]==colors[curNode]) return false;
+            if(colors[node]==-colors[curNode]) continue;
+            if(colors[node]==0) colors[node] = -colors[curNode];
+            if(!dfs(graph,node,colors)) return false;
+        }
+        return true;
+    }
+}
