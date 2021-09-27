@@ -4,7 +4,7 @@ class Solution {
         while(b!=0){//with b holding the carry
             c = a&b;//& to find carry and its position
             a = a^b;//with ^ to simulate real addition
-            b = (c<<1);
+            b = (c<<1);//with b do the carry over shift
         }
         return a;
     }
