@@ -1,0 +1,9 @@
+class Solution {
+    public int singleNumber(int[] nums) {
+        int res = 0;
+        for(int i = 0;i<nums.length;i++){
+            res ^= nums[i];
+        }//0^A = A  A^B^B=A  B^B=0 A^B=1
+        return res;
+    }
+}

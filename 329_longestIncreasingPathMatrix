@@ -1,0 +1,25 @@
+class Solution {
+    int[][] resMem = new int[200][200];
+    public int longestIncreasingPath(int[][] matrix) {
+        int res = 0;
+        for(int i = 0;i<matrix.length;i++){
+            for(int j = 0;j<matrix[i].length;j++){
+                res = Math.max(res,dfs(i,j,matrix));
+            }
+        }
+        return res;
+    }
+    int[][] dirs = new int[][]{{0,1},{0,-1},{1,0},{-1,0}};
+    private int dfs(int i,int j,int[][] matrix){
+        if(resMem[i][j]!=0) return resMem[i][j];
+        int res = 0;
+        for(int[] dir:dirs){
+            int x = dir[0]+i;
+            int y = dir[1]+j;
+            if(x<0||y<0||x>matrix.length-1||y>matrix[0].length-1||matrix[i][j]>=matrix[x][y]) continue;
+            res = Math.max(res,dfs(x,y,matrix));
+        }
+        resMem[i][j] = res+1;
+        return res+1;
+    }
+}

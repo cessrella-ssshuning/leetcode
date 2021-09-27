@@ -1,0 +1,33 @@
+class Solution {
+    int batch,n;
+    Map<Long,Integer> memo;
+    public int maxHappyGroups(int batchSize, int[] groups) {
+        n = groups.length;
+        memo = new HashMap<>();
+        batch  = batchSize;
+        int[] count = new int[batch];
+        for(int i = 0;i<n;i++){
+            count[groups[i]%batch] += 1;//the number of groups has a remainder of i
+        }
+        long state=0l;
+        for(int i = 0;i<batch;i++){
+            state+=(long)(count[i]<<(i*5));
+        }
+        return dfs(0,state,0);//preSum is prev sum of donuts
+    }
+    private int dfs(int cur,long state,int preSum){
+        if(memo.containsKey(state)) return memo.get(state);
+        if(cur==n) return 0;
+        int res = 0;
+        int bonus = preSum%batch==0?1:0;
+        for(int i = 0;i<batch;i++){
+            if((state>>(i*5))%32==0) continue;
+            state -= 1l<<(i*5);
+            res = Math.max(res,dfs(cur+1,state,(preSum+i)%batch));
+            state += 1l<<(i*5);
+        }
+        res += bonus;
+        memo.put(state,res);
+        return res;
+    }
+}

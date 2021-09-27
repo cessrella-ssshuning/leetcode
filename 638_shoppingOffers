@@ -1,0 +1,42 @@
+class Solution {
+    int minPrice;
+    public int shoppingOffers(List<Integer> price, List<List<Integer>> special, List<Integer> needs) {
+        minPrice = getPrice(price,needs);
+        dfs(price,special,needs,0,0);
+        return minPrice;
+    }
+    private int getPrice(List<Integer> price,List<Integer> needs){
+        int total = 0;
+        for(int i = 0;i<price.size();i++){
+            total += price.get(i)*needs.get(i);
+        }
+        return total;
+    }
+    private void dfs(List<Integer> price,List<List<Integer>> special,List<Integer> needs,int index,int used){
+        if(used>=minPrice) return;
+        if(index==special.size()){
+            used += getPrice(price,needs);
+            minPrice = Math.min(minPrice,used);
+            return;
+        }
+        List<Integer> offer = special.get(index);
+        int flag = 0;
+        for(int i = 0;i<needs.size();i++){
+            if(needs.get(i)<offer.get(i)){
+                flag = 1;
+                break;
+            }
+        }
+        if(flag==0){//we can use current special offer;
+           // used += offer.get(needs.size()); used cannot be updated util next time
+            List<Integer> nextNeeds = new ArrayList<>();
+            for(int i = 0;i<needs.size();i++){
+                nextNeeds.add(needs.get(i)-offer.get(i));
+            }
+            dfs(price,special,nextNeeds,index,used+offer.get(needs.size()));//index th offer can be used multiple times
+        }
+        
+        dfs(price,special,needs,index+1,used);//will go to next either current offer is taken or not
+                
+    }
+}
