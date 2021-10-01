@@ -1,0 +1,35 @@
+class Solution {
+    // [0,2]                 
+    //  [1,          9]
+    //  [1,    5]
+    //      [4,  6]
+    //        [5,    9]
+    //             [8,10]
+    // end 2
+    // res 0
+    
+    public int videoStitching(int[][] clips, int time) {
+        Arrays.sort(clips,(a,b)->a[0]-b[0]==0?b[1]-a[1]:a[0]-b[0]);
+        int i = 1;
+        int res = 1;
+        if(clips[0][0]!=0) return -1;
+        int end = clips[0][1];
+        while(i<clips.length&&end<time){
+            if(clips[i][0]==clips[i-1][0]){
+                i++;
+                continue;
+            }
+            boolean isUpdated = false;
+            int newEnd = end;
+            while(i<clips.length&&clips[i][0]<=end){
+                newEnd = Math.max(newEnd,clips[i++][1]);
+                isUpdated = true;
+            }
+            end = newEnd;
+            if(isUpdated) res++;
+            else i++;
+        }
+        if(end<time) return -1;
+        return res;
+    }
+}

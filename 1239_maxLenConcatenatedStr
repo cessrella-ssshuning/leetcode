@@ -1,0 +1,85 @@
+class Solution {
+    // cba
+    // val: 210
+    //      111
+    // ------------
+    //         001
+    //         010
+    //         100
+    // ------------
+    //         |
+    int res = 0;
+    public int maxLength(List<String> arr) {
+        List<Integer> freq = new ArrayList<>();
+        for(int i = 0;i<arr.size();i++){
+            String s = arr.get(i);
+            int flag = 0,bit = 0;
+            for(int j = 0;j<s.length();j++){
+                int val = s.charAt(j)-'a';
+                if(((bit>>val)&1)==1) flag = 1;//appear more than once
+                else bit |= (1<<val);//the ith String chars' frequency
+            }
+            if(flag==0){
+                freq.add(bit);
+              //  System.out.println(Integer.toBinaryString(bit));
+            }
+            
+        }
+        
+        for (int i=0; i<freq.size(); i++)
+            dfs(freq, i, freq.get(i));
+        return res;  
+    }
+    private void dfs(List<Integer> freq,int i,int bits){
+        res = Math.max(res,countBits(bits));
+        for(int j = i+1;j<freq.size();j++){
+            if((freq.get(j)&bits)==0){
+                dfs(freq,j,bits+freq.get(j));
+            }
+        }
+    }
+    private int countBits(int n){
+        int count = 0;
+        while (n > 0) {
+            count += n & 1;
+            n >>= 1;
+        }
+        return count;
+    }
+    
+}
+class Solution {
+    // cba
+    // val: 210
+    //      111
+    // ------------
+    //         001
+    //         010
+    //         100
+    // ------------
+    //         |
+    int res = 0;
+    public int maxLength(List<String> arr) {
+        dfs(arr,0,"");
+        return res;
+    }
+    private void dfs(List<String> list,int i,String s){
+        res = Math.max(res,s.length());
+        if(i==list.size()||!isUnique(s)) return;
+        for(int j = i;j<list.size();j++){
+            if(isUnique(s+list.get(j)))
+                dfs(list,j+1,s+list.get(j));
+        }
+    
+    }
+    private boolean isUnique(String s){
+        int[] freq = new int[26];
+        for(int i = 0;i<s.length();i++){
+            int val = s.charAt(i)-'a';
+            if(freq[val]!=0) return false;
+            freq[val] = 1;
+        }
+        return true;
+    }
+    
+}
