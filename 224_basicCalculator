@@ -1,0 +1,54 @@
+class Solution {
+    /*
+    stack (1,4,5,2)
+    (1+(4+5+2)-3)+(6+8)
+                 ^               
+    sum 9
+    preSign -
+    stack(,)
+    stack(,)
+    comes into '(' push into sum,sign
+    after '(' sign set to +,set sum to 0
+    comes into ')' pop sign
+    sign.pop()*sum+val.pop() -> set to sum
+    1*14+9 -> sum
+    return sum
+    */
+    public int calculate(String s) {
+        int sum = 0;
+        int preSign = 1;
+        Stack<Integer> signs = new Stack<>();
+        Stack<Integer> vals = new Stack<>();
+        for(int i = 0;i<s.length();i++){
+            if(s.charAt(i)==' ') continue;
+            if(s.charAt(i)=='('){
+                signs.push(preSign);
+                vals.push(sum);
+                preSign = 1;
+                sum = 0;
+            }
+            if(s.charAt(i)=='+'){
+                preSign = 1;
+            }
+            if(s.charAt(i)=='-'){
+                preSign = -1;
+            }
+            int val = 0;
+            boolean flag = false;
+            while(i<s.length()&&Character.isDigit(s.charAt(i))){
+                val=val*10+(s.charAt(i)-'0');
+                i++;
+                flag = true;
+            }
+            if(flag){
+                i--;
+                sum += preSign*val;
+            }
+            
+            if(s.charAt(i)==')'){
+                sum = signs.pop()*sum+vals.pop();
+            }     
+        }
+        return sum;
+    }
+}

@@ -1,0 +1,16 @@
+class Solution {
+    public boolean isValidBST(TreeNode root) {
+        return isValid(root,Long.MAX_VALUE,Long.MIN_VALUE);
+    }//max and min values are passed from top to bottom
+    //the base case values are passed from bottom to top
+    private boolean isValid(TreeNode node,long max,long min){
+        if(node==null) return true;
+        if(node.val>=max||node.val<=min) return false;
+        
+        boolean left = isValid(node.left,node.val,min);//for the left node, node.val is already the maximum value 
+        boolean right = isValid(node.right,max,node.val);//for the right node,node.val is already the minimum value
+        
+        return left&right;
+    
+    }
+}
