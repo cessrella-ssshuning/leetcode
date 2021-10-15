@@ -1,0 +1,68 @@
+class Solution {
+    public List<String> fullJustify(String[] words, int maxWidth) {
+        List<String> res = new ArrayList<>();
+        int i = 0;
+        int curNum = 0;
+        int cur = 0;
+        while(i<words.length){
+            int spaceNeeded = curNum+words[i].length();//use curNum here: curNum+=words[i].length(),will make curNum add a space no matter curNum<=maxWidth or not
+            if(curNum>0){
+                spaceNeeded += 1;
+            }
+            if(spaceNeeded<=maxWidth){//equal judgement is important
+                if(cur>0) curNum += 1;
+                curNum += words[i].length();
+                cur++;
+                i++;
+            }else{
+                res.add(constructString(i,cur,curNum,maxWidth,words));
+                cur = 0;
+                curNum = 0;
+            }
+        }
+        if(curNum>0){
+            res.add(constructLeftLine(i,cur,curNum,maxWidth,words));
+        }
+        return res;
+    }
+    private String constructString(int index,int cur,int curNum,int maxWidth,String[] words){
+        int slots = cur - 1;//number of slot between two words
+        if(slots==0) return constructLeftLine(index,cur,curNum,maxWidth,words);
+        int space = maxWidth - (curNum - slots);
+        int eachSpace = space/slots;
+        int extraSpace = space%slots;
+        StringBuilder sb = new StringBuilder();
+        for(int i = index - cur;i<index;i++){
+            if(i!=index-cur){
+                
+                for(int j = 0;j<eachSpace;j++){
+                    sb.append(" ");
+                    if(extraSpace>0){
+                        sb.append(" ");
+                        extraSpace--;
+                    }
+                }
+            }
+            sb.append(words[i]);
+            
+        }
+        return sb.toString();
+    }
+    private String constructLeftLine(int index,int cur,int curNum,int maxWidth,String[] words){
+        int space = maxWidth - curNum;
+        StringBuilder sb = new StringBuilder();
+        for(int i = index-cur;i<index;i++){
+            if(i!=index-cur){
+                sb.append(" ");    
+            }
+            sb.append(words[i]);
+            if(i==index-1){
+                for(int j = 0;j<space;j++){
+                    sb.append(" ");
+                }
+            }
+            
+        }
+        return sb.toString(); 
+    }
+}

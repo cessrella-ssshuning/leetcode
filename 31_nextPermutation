@@ -1,0 +1,30 @@
+class Solution {
+    /*
+    1,3,2
+      ^
+    
+    if it's in descending order, return in ascending order
+    starting from the end of the arr
+    find the first one not in ascending order, the number forward to be exchanged with currend
+    then sort from current till the end
+    */
+    public void nextPermutation(int[] nums) {
+        int i = nums.length-1;
+        while(i>0&&nums[i]<=nums[i-1]){//the first one not increasing
+            i--;
+        }
+        if(i==0){
+            Arrays.sort(nums);
+            return;
+        }
+        int j = nums.length-1;
+        while(j>i-1&&nums[j]<=nums[i-1]){// the first one larger than i-1
+            j--;
+        }
+        int tmp = nums[j];
+        nums[j] = nums[i-1];
+        nums[i-1] = tmp;
+     //   sort nums starting from i
+        Arrays.sort(nums,i,nums.length);
+    }
+}
