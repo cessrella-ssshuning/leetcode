@@ -1,0 +1,25 @@
+class TicTacToe {
+
+    int size;
+    int[] rows;
+    int[] cols;
+    int diagonal;
+    int antidiagonal;
+    public TicTacToe(int n) {
+        size = n;
+        rows = new int[n];
+        cols = new int[n];
+        diagonal = 0;
+        antidiagonal = 0;
+    }
+    
+    public int move(int row, int col, int player) {
+        int toAdd = player==1?1:-1;
+        rows[row] += toAdd;
+        cols[col] += toAdd;
+        if(row==col) diagonal+=toAdd;
+        if(row+col == size-1) antidiagonal+=toAdd;
+        if(Math.abs(rows[row])==size||Math.abs(cols[col])==size||Math.abs(diagonal)==size||Math.abs(antidiagonal)==size) return player;
+        return 0;
+    }
+}

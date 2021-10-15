@@ -1,0 +1,47 @@
+class Solution {
+    public int trapRainWater(int[][] heightMap) {
+        int m = heightMap.length;
+        int n = heightMap[0].length;
+        boolean[][] visited = new boolean[m][n];
+        PriorityQueue<Point> pq = new PriorityQueue<>((a,b)->a.height-b.height);//find the lowest surface
+        for(int i = 0;i<m;i++){
+            for(int j = 0;j<n;j++){
+                if(i==0||i==m-1||j==0||j==n-1){
+                    pq.offer(new Point(heightMap[i][j],i,j));
+                }
+            }
+        }
+        int water = Integer.MIN_VALUE;
+        int res = 0;
+        int[][] dirs = new int[][]{{0,1},{0,-1},{1,0},{-1,0}};
+        while(!pq.isEmpty()){
+            Point p = pq.poll();
+            int h = p.height;
+            int x = p.x;
+            int y = p.y;
+            if(visited[x][y]) continue;
+            visited[x][y] = true;
+            if(h>water) water = h;
+            res += water-h;
+            for(int[] dir:dirs){
+                int i = dir[0]+x;
+                int j = dir[1]+y;
+                if(i<0||i>=m||j<0||j>=n) continue;
+                if(visited[i][j]) continue;
+                pq.offer(new Point(heightMap[i][j],i,j));
+            }
+        }
+        return res;
+        
+    }
+}
+class Point{
+    int height;
+    int x;
+    int y;
+    public Point(int height,int x,int y){
+        this.height = height;
+        this.x = x;
+        this.y = y;
+    }
+}
