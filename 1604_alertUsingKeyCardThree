@@ -1,0 +1,33 @@
+class Solution {
+    /* d         d    d       l       l       l        l
+    ["10:00","10:40","11:00","09:00","11:00","13:00","15:00"]
+     map(d,10,10:40,11:00)
+     queue(10,10:40,11:00)
+     10:40,11:00
+    */
+    public List<String> alertNames(String[] keyName, String[] keyTime) {
+        List<String> res = new ArrayList<>();
+        Map<String,TreeSet<Integer>> nameToTime = new HashMap<>();
+        for(int i = 0;i<keyTime.length;i++){
+            nameToTime.putIfAbsent(keyName[i],new TreeSet<>());
+            int time = Integer.parseInt(keyTime[i].substring(0,2))*60+Integer.parseInt(keyTime[i].substring(3));
+            nameToTime.get(keyName[i]).add(time);
+        }
+        for(Map.Entry<String,TreeSet<Integer>> entry:nameToTime.entrySet()){
+            PriorityQueue<Integer> queue = new PriorityQueue<>();
+            TreeSet<Integer> set = entry.getValue();
+            for(Integer time:set){
+                if(!queue.isEmpty()){
+                    int visit = queue.peek();
+                    if(time-visit>60){
+                        queue.poll();
+                    }
+                }
+                queue.offer(time);
+            }
+            if(queue.size()>=3) res.add(entry.getKey());
+        }
+        Collections.sort(res);
+        return res;
+    }
+}
