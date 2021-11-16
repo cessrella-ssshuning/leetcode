@@ -1,0 +1,54 @@
+class Solution {
+    /*
+           "1 1 0 1 1 "
+            ^
+     flip   1 2 1 
+    noflip  0 0 2
+    final 
+    prev 0 0/1
+    prev 1 num 0 
+           num 1
+    */
+    public int minFlipsMonoIncr(String s) {
+        int[] flip = new int[s.length()];
+        int[] noFlip = new int[s.length()];
+        flip[0] = 1;
+        noFlip[0] = 0;
+        for(int i = 1;i<s.length();i++){
+            int num = s.charAt(i)-'0';
+            int prev = s.charAt(i-1)-'0';
+            if(prev==0){
+                if(num==1){
+                    noFlip[i] = Math.min(noFlip[i-1],flip[i-1]);
+                    flip[i] = noFlip[i-1]+1;
+                }else{
+                    noFlip[i] = noFlip[i-1];
+                    flip[i] = Math.min(noFlip[i-1],flip[i-1])+1;
+                }      
+            }else{
+                if(num==1){
+                    noFlip[i] = noFlip[i-1];
+                    flip[i] = flip[i-1]+1;
+                }else{//
+                    flip[i] = noFlip[i-1]+1;
+                    noFlip[i] = flip[i-1];
+                }
+            }  
+        }
+        return Math.min(flip[s.length()-1],noFlip[s.length()-1]);
+    }
+}
+class Solution {
+    public int minFlipsMonoIncr(String s) {
+        int oneCount = 0;
+        int flipCount = 0;
+        for(int i = 0;i<s.length();i++){
+            if(s.charAt(i)=='0'){
+                flipCount = Math.min(oneCount,flipCount+1);//choose flip current 0 or flip all previous 1s to 0;if choosing to flip all previous 1's will make flipCount smaller, it will be saved
+            }else{//the point is that wo don't need to consider the situation when cur is 1, to get min flips, we should not flip at this time
+                oneCount++;
+            }
+        }
+        return flipCount;
+    }
+}
