@@ -1,0 +1,36 @@
+class Solution {
+    /*
+    [3,1,2,4]
+    ^
+    */
+    public int sumSubarrayMins(int[] arr) {
+        Stack<Integer> stack = new Stack<>();
+        int[] nextSmaller = new int[arr.length];
+        int[] prevSmaller = new int[arr.length];//values are index
+        Arrays.fill(nextSmaller,arr.length);
+        Arrays.fill(prevSmaller,-1);
+        for(int i = 0;i<arr.length;i++){
+            while(!stack.isEmpty()&&arr[stack.peek()]>arr[i]){//this is the condition to pop values,so will keep equal elements within this range of subarray
+                nextSmaller[stack.pop()] = i;
+            }
+            stack.push(i);
+        }
+        while(!stack.isEmpty()) stack.pop();
+        for(int j = arr.length-1;j>=0;j--){
+            while(!stack.isEmpty()&&arr[stack.peek()]>=arr[j]){
+                prevSmaller[stack.pop()]=j;
+            }
+            stack.push(j);
+        }
+        //  3 4 5[5 6 5 2
+    //   -1 0 1 2 3 4 5 6 7  
+        // 
+        long res = 0;
+        long M  = 1000000007;
+        for(int i = 0;i<arr.length;i++){
+            long product = arr[i]*(nextSmaller[i]-i)%M*(i-prevSmaller[i])%M;
+            res = (res+product)%M;
+        }
+        return (int)res;
+    }
+}
