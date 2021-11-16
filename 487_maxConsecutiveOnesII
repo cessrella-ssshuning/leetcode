@@ -1,0 +1,25 @@
+class Solution {
+    /*
+    [1,0,1,1,0]
+             ^
+     flip  4
+     noflip 2
+    */
+    public int findMaxConsecutiveOnes(int[] nums) {
+        int flip = 0;//means already flipped a one ->length of consecutive ones
+        int noflip = 0;//haven't flipped any ones -> length of consecutive ones
+        int res = 0;
+        for(int i = 0;i<nums.length;i++){
+            if(nums[i]==1){
+                noflip++;
+                flip++;
+            }else{
+                flip = noflip+1;
+                noflip = 0;
+            }
+            int tmpRes = Math.max(noflip,flip);
+            res = Math.max(res,tmpRes);
+        }
+        return res;
+    }
+}

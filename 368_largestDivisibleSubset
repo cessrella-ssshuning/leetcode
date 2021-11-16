@@ -1,0 +1,36 @@
+class Solution {
+    /*
+    [1,2,3]
+    [1][2][3]
+       []
+    */
+    public List<Integer> largestDivisibleSubset(int[] nums) {
+        Arrays.sort(nums);
+        List<Integer> list = new ArrayList<>();
+        int[] count = new int[nums.length];
+        int[] prev = new int[nums.length];
+        int max = 0;
+        int index = -1;
+        for(int i = 0;i<nums.length;i++){
+            prev[i] = -1;//no previous subset
+            count[i] = 1;//itself
+            for(int j = i-1;j>=0;j--){
+                if(nums[i]%nums[j]==0){
+                    if(count[i]<count[j]+1){
+                        count[i] = count[j]+1;
+                        prev[i] = j;//this can be updated to when count[i] is updated to largest
+                    }
+                }
+            }
+            if(count[i]>max){
+                max = count[i];
+                index= i;
+            }
+        }
+        while(index!=-1){
+            list.add(nums[index]);
+            index = prev[index];
+        }
+        return list;
+    }
+}

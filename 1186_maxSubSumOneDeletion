@@ -1,0 +1,26 @@
+class Solution {
+    /*
+       [-1,-1,-1,-1]
+                  ^
+     drop  -1
+     nodrop  -1
+     temp -1
+     res 
+     这种一次删除权利的基本就是dual status，delete or not delete
+     ending with current not dropping ->
+    */
+    public int maximumSum(int[] arr) {
+        if(arr.length==1) return arr[0];
+        int res = Integer.MIN_VALUE;
+        int drop = 0;//ending with current element having dropped one
+        int nodrop = arr[0];//ending with current element not dropping current number
+        for(int i = 1;i<arr.length;i++){
+            int temp = nodrop;
+            nodrop = Math.max(nodrop+arr[i],arr[i]);//maybe previous drop <0 
+            drop = Math.max(drop+arr[i],temp);//already dropped one previously or drop current
+            int tempRes = Math.max(drop,nodrop);
+            res = Math.max(tempRes,res);
+        }
+        return res;
+    }
+}

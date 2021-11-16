@@ -1,0 +1,17 @@
+class Solution {
+    
+    public int minCost(int[][] costs) {
+        int green = 0;
+        int red = 0;
+        int blue = 0;
+        for(int[] cost:costs){
+            int tmpGreen = green;
+            int tmpRed = red;
+            green = Math.min(red,blue)+cost[2];
+            red = Math.min(blue,tmpGreen)+cost[0];
+            blue = Math.min(tmpGreen,tmpRed)+cost[1];
+        }
+        int res = Math.min(green,red);
+        return Math.min(res,blue);
+    }
+}
