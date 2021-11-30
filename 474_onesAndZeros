@@ -1,0 +1,35 @@
+class Solution {
+    /*
+    ["10"," 0001","111001","1","0"]
+      one:1  1      4       1   0
+      zero:1 3      2       0   1
+      (0,1)
+      (0,1)
+      
+    */
+    public int findMaxForm(String[] strs, int m, int n) {
+        int[][] dp = new int[m+1][n+1];
+        dp[0][0] = 0;//m means num of 0, n means num of 1
+        //dp[m][n] means with m 0, n 1, how many strs taken
+        //dp[m][n] <-dp[m-zeroNum][n-oneNum]
+        for(int i = 0;i<strs.length;i++){
+            String s = strs[i];
+            int oneNum = 0;
+            int zeroNum = 0;
+            for(int j = 0;j<s.length();j++){
+                if(s.charAt(j)=='1'){
+                    oneNum++;
+                }else{
+                    zeroNum++;
+                }
+            }
+            for(int p = m;p>=zeroNum;p--){
+                for(int q = n;q>=oneNum;q--){
+                    dp[p][q] = Math.max(dp[p][q],dp[p-zeroNum][q-oneNum]+1);
+                }
+            }
+        }
+        return dp[m][n];
+        
+    }
+}

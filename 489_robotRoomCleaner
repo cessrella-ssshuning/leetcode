@@ -1,0 +1,50 @@
+/**
+ * // This is the robot's control interface.
+ * // You should not implement it, or speculate about its implementation
+ * interface Robot {
+ *     // Returns true if the cell in front is open and robot moves into the cell.
+ *     // Returns false if the cell in front is blocked and robot stays in the current cell.
+ *     public boolean move();
+ *
+ *     // Robot will stay in the same cell after calling turnLeft/turnRight.
+ *     // Each turn will be 90 degrees.
+ *     public void turnLeft();
+ *     public void turnRight();
+ *
+ *     // Clean the current cell.
+ *     public void clean();
+ * }
+ [1,1,1,1,1,0,1,1]
+ [1,1,1,-,1,0,1,1]
+ [1,0,1,1,1,1,1,1]
+ [0,0,0,1,0,0,0,0]
+ [1,1,1,1,1,1,1,1]
+ */
+
+class Solution {
+    public void cleanRoom(Robot robot) {
+        //up
+        dfs(0,0,0,robot);
+    }
+    int[][] dirs = new int[][]{{0,1},{-1,0},{0,-1},{1,0}};
+    Set<String> set = new HashSet<>();
+    private void dfs(int i,int j,int curDir,Robot robot){
+        robot.clean();
+        set.add(i+","+j);
+        for(int k = 0;k<4;k++){
+            int nextDir = (curDir+k)%4;
+            int x = i+dirs[nextDir][0];
+            int y = j+dirs[nextDir][1];//these are to record already visited places
+            if(!set.contains(x+","+y)&&robot.move()){
+                dfs(x,y,nextDir,robot);
+                robot.turnRight();
+                robot.turnRight();
+                robot.move();
+                robot.turnRight();
+                robot.turnRight(); 
+            }
+            robot.turnRight();//make sure this turn is consistent with dirs 顺时针
+        }
+        
+    }
+}

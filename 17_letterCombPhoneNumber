@@ -1,0 +1,22 @@
+class Solution {
+    String[] mapping = {"","","abc","def","ghi","jkl","mno","pqrs","tuv","wxyz"};
+    public List<String> letterCombinations(String digits) {
+        List<String> list = new ArrayList<>();
+        if(digits==null||digits.length()==0) return list;
+        dfs(digits,0,list,"");
+        
+        return list;
+    }
+    private void dfs(String digits,int index,List<String> res,String cur){
+        
+        if(index==digits.length()){
+            res.add(cur);
+            return;
+        }
+        String s = mapping[digits.charAt(index)-'0'];
+        for(int i = 0;i<s.length();i++){
+            char c = s.charAt(i);
+            dfs(digits,index+1,res,cur+c);
+        }
+    }
+}

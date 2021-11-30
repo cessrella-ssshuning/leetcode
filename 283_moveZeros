@@ -1,0 +1,23 @@
+class Solution {
+    /*
+    [0,1,0,3,12]
+     0 1 2 3 4
+             ^
+             ^
+     size 2
+     how many zeros there are before this number
+     than how many move forward operations
+    */
+    public void moveZeroes(int[] nums) {
+        int count = 0;
+        for(int i = 0;i<nums.length;i++){
+            if(nums[i]==0){
+                count++;
+            }else{
+                int tmp = nums[i-count];
+                nums[i-count] = nums[i];
+                nums[i] = tmp;
+            }
+        }
+    }
+}

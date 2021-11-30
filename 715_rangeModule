@@ -1,38 +1,46 @@
 class RangeModule {
-
-    TreeMap<Integer, Integer> intervals = new TreeMap<>();
+    /*
+            [10,  14)     [16,   20)
+            leftKey 10
+            rightKey 10
+     */
+    TreeMap<Integer,Integer> map;
+    public RangeModule() {
+        map = new TreeMap<>();
+    }
     
     public void addRange(int left, int right) {
-        Integer st = intervals.floorKey(left);
-        Integer end = intervals.floorKey(right);
-        if(st!=null&&intervals.get(st)>=left){
-            left = st;
+        Integer leftKey = map.floorKey(left);
+        Integer rightKey = map.floorKey(right);
+        if(leftKey!=null&&map.get(leftKey)>=left){
+            left = leftKey;
         }
-        if(end!=null&&intervals.get(end)>right){
-            right = intervals.get(end); 
+        if(rightKey!=null&&map.get(rightKey)>right){
+            right = map.get(rightKey);
         }
-        intervals.put(left,right);
-       intervals.subMap(left,false,right,true).clear();
-        
-       
+        map.put(left,right);
+        map.subMap(left,false,right,true).clear();
     }
     
     public boolean queryRange(int left, int right) {
-       
-        Integer st = intervals.floorKey(left);
-        if(st==null) return false;
-        return intervals.get(st)>=right;
+        if(right<=left) return false;
+        Integer leftKey = map.floorKey(left);
+        Integer rightKey = map.floorKey(right);
+        if(leftKey!=null&&rightKey!=null&&leftKey==rightKey&&map.get(rightKey)>=right){
+            return true;
+        }
+        return false;
     }
     
     public void removeRange(int left, int right) {
-        Integer st = intervals.floorKey(left);
-        Integer end = intervals.floorKey(right);
-         if(end!=null&&intervals.get(end)>right){//这个放前放后到底什么区别
-            intervals.put(right,intervals.get(end));
+        Integer leftKey = map.floorKey(left);
+        Integer rightKey = map.floorKey(right);
+        if(leftKey!=null&&map.get(leftKey)>left){//这个放在前面，leftkey会被覆盖
+            map.put(leftKey,left);
         }
-        if(st!=null&&intervals.get(st)>left){
-            intervals.put(st,left);
+        if(rightKey!=null&&map.get(rightKey)>right){//这个放在前面，原来的rightkey不变
+            map.put(right,map.get(rightKey));
         }
-        intervals.subMap(left, true, right, false).clear();  
+        map.subMap(left,true,right,false).clear();
     }
 }

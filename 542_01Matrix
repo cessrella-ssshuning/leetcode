@@ -1,0 +1,44 @@
+class Solution {
+    /*
+     0  0  0
+     0  1  0
+     1  1  1
+     x  2
+     y  1
+     queue((1,1)(2,0)(2,2))
+     
+    */
+    public int[][] updateMatrix(int[][] mat) {
+        Queue<int[]> queue = new LinkedList<>();
+        for(int i = 0;i<mat.length;i++){
+            for(int j = 0;j<mat[i].length;j++){
+                if(mat[i][j]==0){
+                    queue.offer(new int[]{i,j});
+                }else{
+                    mat[i][j] = Integer.MAX_VALUE;
+                }
+            }
+        }    
+        boolean[][] visited = new boolean[mat.length][mat[0].length];
+        int[][] dirs = new int[][]{{0,1},{0,-1},{1,0},{-1,0}};
+        
+        while(!queue.isEmpty()){
+            int size = queue.size();
+            for(int s = 0;s<size;s++){
+                int[] coor = queue.poll();
+                int x = coor[0];
+                int y = coor[1];
+                if(visited[x][y]) continue;
+                visited[x][y] = true;
+                for(int[] dir:dirs){
+                    int m = dir[0]+x;
+                    int n = dir[1]+y;
+                    if(m<0||m>=mat.length||n<0||n>=mat[0].length||mat[m][n]<=mat[x][y]+1) continue;
+                    mat[m][n] = mat[x][y]+1;
+                    queue.offer(new int[]{m,n});
+                }
+            }
+        }
+        return mat;
+    }
+}

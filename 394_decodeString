@@ -1,0 +1,57 @@
+class Solution {
+    /*
+     3[a2[c]]
+     3[acc]
+     3[a2[c]]
+     a2[c] 
+         ^
+     res "c"
+     stack {"acc",}
+     numStack {,}
+     
+     "3[a]2[bc]"
+         ^
+      res "a"
+      num  {3}
+      stack {""}
+    */
+    public String decodeString(String s) {
+        Stack<Integer> numStack = new Stack<>();
+        Stack<String> stack = new Stack<>();
+        String res = "";
+        int i = 0;
+        while(i<s.length()){
+            int num = 0;
+            char c = s.charAt(i);
+            if(Character.isDigit(c)){
+                while(Character.isDigit(s.charAt(i))&&i<s.length()){
+                    num = num*10+(s.charAt(i)-'0');
+                    i++;
+                }
+                numStack.push(num);
+                
+            }else if(c=='['){
+                stack.push(res);
+                res = "";
+                i++;
+            }else if(c==']'){
+                int count = numStack.pop();
+               // System.out.println(stack.size());
+                String str = stack.pop();
+                for(int j = 0;j<count;j++){
+                    str += res;
+                }
+                res = str;
+                i++;
+            }else{
+                res += c;
+                i++;
+            }
+            
+        }
+        if(!stack.isEmpty()){
+            res = stack.pop()+res;
+        }
+        return res;
+    }
+}

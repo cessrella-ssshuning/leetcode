@@ -1,0 +1,67 @@
+class Solution {
+    /*
+    ["wrta","wrfb","er","ett","rftt"]
+      ^     
+      t<f
+      w<e
+      r<t
+      e<r
+      注意corner case ["abc","a"]这种，以前写的版本不AC了
+    */
+    public String alienOrder(String[] words) {
+        Map<Character,Set<Character>> graph = new HashMap<>();
+        Map<Character,Integer> indegree = new HashMap<>();
+        for(int i = 0;i<words.length;i++){
+            for(char c:words[i].toCharArray()){
+                indegree.putIfAbsent(c,0);
+            }
+        }
+        for(int i = 0;i<words.length-1;i++){
+            String s1 = words[i];
+            String s2 = words[i+1];
+            int index = 0;
+            if(s1.length()>s2.length()&&s1.substring(0,s2.length()).equals(s2)) return "";
+            while(index<Math.min(s1.length(),s2.length())){ 
+                char c1 = s1.charAt(index);
+                char c2 = s2.charAt(index);
+                index++;
+                if(c1==c2){
+                    continue;
+                }
+                else{
+                    graph.putIfAbsent(c1,new HashSet<>());
+                    if(!graph.get(c1).contains(c2)){
+                        graph.get(c1).add(c2);
+                        indegree.put(c2,indegree.get(c2)+1);
+                    }
+                }
+                break;
+            }
+            
+        }
+        Queue<Character> queue = new LinkedList<>();
+        for(Map.Entry<Character,Integer> entry:indegree.entrySet()){
+            if(entry.getValue()==0){
+                queue.offer(entry.getKey());
+            }
+        }
+        StringBuilder sb = new StringBuilder();
+        while(!queue.isEmpty()){
+            int size = queue.size();
+            for(int i = 0;i<size;i++){
+                char c = queue.poll();
+                sb.append(c);
+                if(graph.containsKey(c)){
+                    for(char nextC: graph.get(c)){
+                        indegree.put(nextC,indegree.get(nextC)-1);
+                        if(indegree.get(nextC)==0){
+                            queue.offer(nextC);
+                        }
+                    }
+                }
+            }
+        }
+        if(indegree.size()>sb.length()) return "";
+        return sb.toString();
+    }
+}

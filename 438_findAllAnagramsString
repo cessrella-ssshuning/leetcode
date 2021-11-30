@@ -1,0 +1,31 @@
+class Solution {
+    /*
+    "cbaebabacd"
+      ^
+     ^
+     abc
+     end 0
+     st 0
+     p.length() 3
+     c c
+    */
+    public List<Integer> findAnagrams(String s, String p) {
+        int[] pArr = new int[26];
+        for(int i = 0;i<p.length();i++){
+            pArr[p.charAt(i)-'a']++;
+        }
+        int st = 0;
+        int[] sArr = new int[26];
+        List<Integer> list = new ArrayList<>();
+        for(int i = 0;i<s.length();i++){
+            sArr[s.charAt(i)-'a']++;
+            if(i>=p.length()){
+                sArr[s.charAt(i-p.length())-'a']--; 
+            }
+            if(Arrays.equals(pArr,sArr)){
+                list.add(i-p.length()+1);
+            }
+        }
+        return list;
+    }
+}

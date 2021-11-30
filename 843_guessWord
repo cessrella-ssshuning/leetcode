@@ -1,0 +1,36 @@
+/**
+ * // This is the Master's API interface.
+ * // You should not implement it, or speculate about its implementation
+ * interface Master {
+ *     public int guess(String word) {}
+ * }
+ */
+class Solution {
+    public void findSecretWord(String[] wordlist, Master master) {
+        List<String> wordslist = new ArrayList<>(Arrays.asList(wordlist));
+        Random rand = new Random();
+        for(int t = 0;t<10;t++){
+            int r = rand.nextInt(wordslist.size());
+            String word = wordslist.get(r);
+            int k = master.guess(word);
+            if(k==6) return;
+            List<String> list = new ArrayList<>();
+            for(String s :wordslist){
+                if(s!=word){
+                    if(similarity(s,word)==k){
+                        list.add(s);
+                    }
+                }       
+            }
+            wordslist = list;
+        }
+               
+    }
+    private int similarity(String a,String b){
+        int res = 0;
+        for(int i = 0;i<a.length();i++){
+            if(a.charAt(i)==b.charAt(i)) res++;
+        }
+        return res;
+    }
+}

@@ -1,0 +1,57 @@
+public int findCheapestPrice(int n, int[][] flights, int src, int dst, int k) {
+        int[][] dp = new int[k+2][n];
+        for(int i = 0;i<k+2;i++){
+            for(int j = 0;j<n;j++){
+                dp[i][j] = Integer.MAX_VALUE/2;
+            }
+        }
+        dp[0][src] = 0;
+        for(int i = 1;i<=k+1;i++){
+            for(int[] flight:flights){
+                int st = flight[0];
+                int end = flight[1];
+                int cost = flight[2];
+                dp[i][end] = Math.min(dp[i][end],dp[i-1][st]+cost);
+              //  System.out.println(i+","+end+","+dp[i][end]+","+dp[i-1][st]+cost);
+            }
+        }
+        int res = Integer.MAX_VALUE;
+        for(int i = 0;i<k+2;i++){
+            res = Math.min(res,dp[i][dst]);
+        }
+        return res == Integer.MAX_VALUE/2?-1:res;
+    }
+     public int findCheapestPrice(int n, int[][] flights, int src, int dst, int k) {
+        Map<Integer,Map<Integer,Integer>> map = new HashMap<>();
+        for(int[] flight:flights){
+            map.putIfAbsent(flight[0],new HashMap<>());
+            map.get(flight[0]).put(flight[1],flight[2]);
+        }
+        int[][] memo = new int[k+2][n];
+        for(int i = 0;i<k+2;i++){
+            Arrays.fill(memo[i],Integer.MAX_VALUE/2);
+        }
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a,b)->a[0]-b[0]);
+        pq.offer(new int[]{0,src,0});
+        while(!pq.isEmpty()){
+           
+            int[] pair = pq.poll();
+            int cost = pair[0];
+            int stop = pair[1];
+            int num = pair[2];
+            if(stop==dst) return cost;
+            if(num<=k){
+                if(map.containsKey(stop)){
+                    Map<Integer,Integer> costMap = map.get(stop);
+                    for(Map.Entry<Integer,Integer> entry:costMap.entrySet()){
+                        if(memo[num+1][entry.getKey()]>entry.getValue()+cost){
+                             memo[num+1][entry.getKey()] = entry.getValue()+cost;                                pq.offer(new int[]{entry.getValue()+cost,entry.getKey(),num+1});
+                        }
+
+                    }
+                }
+            }
+            
+        }
+        return -1;
+    }

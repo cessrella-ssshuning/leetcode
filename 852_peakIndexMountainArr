@@ -1,0 +1,29 @@
+class Solution {
+    /*
+    [18,29,38,59,98,100,99,98,90]
+     0  1   2  3  4  5  6  7   8  
+  0  ^      
+  9            ^
+                  ^
+  st 0
+  end 8
+  mid 4
+  larger than left and right
+  
+    */
+    public int peakIndexInMountainArray(int[] arr) {
+        int st = 0;
+        int end = arr.length-1;
+        while(st<end){
+            int mid = st+(end-st)/2;
+            if(mid>=1&&arr[mid]>arr[mid-1]&&mid<arr.length-1&&arr[mid]>arr[mid+1]){
+                return mid;
+            }else if(arr[mid]<arr[mid+1]){
+                st = mid+1;
+            }else{
+                end = mid;
+            }
+        }
+        return st;
+    }
+}

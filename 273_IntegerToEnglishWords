@@ -1,0 +1,60 @@
+class Solution {
+    String[] lessThan20Words = {"", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"};
+    String[] tyWords = {"Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"};
+    String[] dexWords = {"Billion", "Million", "Thousand", "Hundred"};
+    public String numberToWords(int num){
+        if(num==0) return "Zero";
+        return helper1(num);
+    }
+    private String helper1(int num){
+        StringBuilder sb = new StringBuilder();
+        if(num>=1000000000){
+            String numBillion = helper1(num/1000000000);
+            String under = helper1(num%1000000000);
+            sb.append(numBillion+" Billion");
+            if(under.length()>0){
+                sb.append(" ");
+                sb.append(under);
+            }
+        }else if(num>=1000000){
+            String numMillion = helper1(num/1000000);
+            String under = helper1(num%1000000);
+            sb.append(numMillion+" Million");
+            if(under.length()>0){
+                sb.append(" ");
+                sb.append(under);
+            }
+        }else if(num>=1000){
+            String numThousand = helper1(num/1000);
+            String under = helper1(num%1000);
+            sb.append(numThousand+" Thousand");
+            if(under.length()>0){
+                sb.append(" ");
+                sb.append(under);
+            }
+        }else if(num>=100){
+            String numHundred = lessThan20Words[num/100];
+            String under = helper1(num%100);
+            sb.append(numHundred+" Hundred");
+            if(under.length()>0){
+                sb.append(" ");
+                sb.append(under);
+            }
+        }else if(num>=10){
+            if(num<20){
+                return lessThan20Words[num];
+            }else{
+                String numTen = tyWords[num/10-2];
+                String under = lessThan20Words[num%10];
+                sb.append(numTen);
+                if(under.length()>0){
+                    sb.append(" ");
+                    sb.append(under);
+                }
+            }
+        }else{
+            return lessThan20Words[num];
+        }
+        return sb.toString();
+    }
+}

@@ -1,0 +1,45 @@
+class Solution {
+    /*
+    [["#",".","*","."],
+     ["#","#","*","."]]
+    move from left to the right
+    iterate from the right
+    e 0
+    e 1
+    e 2
+    # 3 
+    # 4  
+    o 5  k 
+    count 2
+    k - count
+    */
+    public char[][] rotateTheBox(char[][] box) {
+        int m = box.length;
+        int n = box[0].length;
+        char[][] res = new char[n][m];
+        for(int i = 0;i<n;i++){
+            Arrays.fill(res[i],'.');
+        }
+        for(int i = 0;i<m;i++){//rows
+            for(int j = 0;j<n;j++){//cols
+                int k = j;
+                int count = 0;
+                while(k<n&&box[i][k]!='*'){
+                    if(box[i][k]=='#')
+                        count++;
+                    k++;
+                    
+                }
+                if(k!=n){
+                    res[k][m-i-1] = '*';
+                }
+                for(int s = k-count;s<=k-1;s++){
+                    res[s][m-i-1] = '#';
+                }
+            
+                j = k;
+            }
+        }
+        return res;
+    }
+}

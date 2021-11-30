@@ -1,0 +1,107 @@
+class Solution {
+/*
+kruskal算法。主要想法就是把所有的边排序，然后从最小的边开始找起
+如果找的最小的边跟原来不构成环，那么就把这个边加进去
+直到边的数量等于vertices的数量N-1
+这个跟prim的主要区别就是一个记录边，判断cycle
+一个记录visited点，记录了就skip
+两个方法都是用来找MST
+*/
+    public int minCostConnectPoints(int[][] points) {
+        int n = points.length;
+        List<int[]> edges = new ArrayList<>();
+        for(int i = 0;i<n-1;i++){
+            for(int j = i+1;j<n;j++){
+                int distance = Math.abs(points[i][0]-points[j][0])+Math.abs(points[i][1]-points[j][1]);
+                edges.add(new int[]{i,j,distance});
+            }
+        }
+        Collections.sort(edges,(a,b)->a[2]-b[2]);
+        UnionFind uf = new UnionFind(points.length);
+        int res = 0;
+        for(int i = 0;i<edges.size();i++){//skip the edge that will form a cycle 
+            int[] edge = edges.get(i);
+           // System.out.println(vertices);
+            if(!uf.connected(edge[0],edge[1])){
+                uf.union(edge[0],edge[1]);
+                res += edge[2];
+                if(uf.count==1) return res;
+            }
+        }
+        return res;
+          
+    }
+}
+class UnionFind {
+        int root[];
+        int count;
+
+        public UnionFind(int size) {
+            root = new int[size];
+            for (int i = 0; i < size; i++) {
+                root[i] = i;
+            }
+            count = size;
+        }
+
+        public int find(int x) {
+            while(root[x]!=x){
+                x = root[x];
+            }
+            return root[x];
+        }
+
+        public void union(int x, int y) {
+            int rootX = find(x);
+            int rootY = find(y);
+            if (rootX != rootY) {
+                root[rootY] = rootX;
+            }
+        }
+
+        public boolean connected(int x, int y) {
+            return find(x) == find(y);
+        }
+    }
+
+class Solution {
+    /*
+    prim 解法先随机找一个点,然后找从出发最小的边，然后把这个边的另一个点加进visited
+    也就是通过不断找当前visited过的点出发的最小的边，如果这个边的另一个点没有visited
+    就找这个边
+    */
+    public int minCostConnectPoints(int[][] points) {
+        int n = points.length;
+        Queue<int[]> pq = new PriorityQueue<>((a,b)->a[2]-b[2]);
+        for(int i = 1;i<n;i++){
+            int distance = Math.abs(points[0][0]-points[i][0])+Math.abs(points[0][1]-points[i][1]);
+            pq.offer(new int[]{0,i,distance});
+        }
+       
+        boolean[] visited = new boolean[n];
+        visited[0] = true;
+        int res = 0;
+        int count = n;
+        while(!pq.isEmpty()){
+            int[] edge = pq.poll();
+            int st = edge[0];
+            int end = edge[1];
+            int cost = edge[2];
+            if(!visited[end]){
+                visited[end] = true;
+                res += cost;
+                count--;
+                if(count==1) return res;
+                for(int i = 0;i<n;i++){
+                    if(i!=end&&!visited[i]){
+                       int distance = Math.abs(points[i][0]-points[end][0])+Math.abs(points[i][1]-points[end][1]);
+                        pq.offer(new int[]{end,i,distance});
+                    }
+                }
+            }
+            
+        }
+        return res;
+          
+    }
+}

@@ -1,0 +1,54 @@
+class Solution {
+    int[][] dirs = new int[][]{{1,0},{-1,0},{0,1},{0,-1}};
+    public int shortestDistance(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        int numBuildings = 0;
+        int[][] canReach = new int[m][n];//number of buildings this point can reach
+        int[][] dist = new int[m][n];//total of travel distance this point to get to the buildings
+        for(int i = 0;i<m;i++){
+            for(int j = 0;j<n;j++){
+                if(grid[i][j]==1){
+                    numBuildings++;
+                    bfs(grid,i,j,canReach,dist);
+                }
+            }
+        }
+        int res = Integer.MAX_VALUE;
+        for(int i = 0;i<grid.length;i++){
+            for(int j = 0;j<grid[0].length;j++){
+                if(canReach[i][j]==numBuildings)
+                    res = Math.min(res,dist[i][j]);
+            }
+        }
+        return res==Integer.MAX_VALUE?-1:res;
+    }
+    private void bfs(int[][] grid,int x,int y,int[][] canReach,int[][] dist){
+        Queue<int[]> queue = new LinkedList<>();
+        queue.offer(new int[]{x,y});
+        boolean[][] visited = new boolean[grid.length][grid[0].length];
+        int d = 0;
+        while(!queue.isEmpty()){
+            d++;
+            int size = queue.size();
+            for(int i = 0;i<size;i++){
+                int[] cur = queue.poll();
+                for(int[] dir:dirs){
+                    int p = dir[0]+cur[0];
+                    int q = dir[1]+cur[1];
+                    if(!isValid(grid,p,q,visited)) continue;
+                    visited[p][q] = true;
+                    queue.offer(new int[]{p,q});
+                    canReach[p][q] += 1;
+                    dist[p][q] += d;
+                }
+            }
+        }
+    }
+    private boolean isValid(int[][] grid,int p,int q,boolean[][] visited){
+        if(p<0||p>=grid.length||q>=grid[0].length||q<0) return false;
+        if(grid[p][q]!=0) return false;
+        if(visited[p][q]) return false;
+        return true;
+    }
+}

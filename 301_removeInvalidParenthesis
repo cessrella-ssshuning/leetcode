@@ -1,0 +1,56 @@
+class Solution {
+    /*
+     "()())()" -> 
+      0123456
+      ^
+      i
+      res
+    */
+    List<String> list;
+    int maxLen;
+    public List<String> removeInvalidParentheses(String s) {
+        int count = notValidCount(s);//count to delete
+        maxLen = s.length()-count;//longest length of parenthesis to keep
+        list = new ArrayList<>();
+        dfs("",s,0,0);
+        return list;
+    }
+    private void dfs(String res,String s,int i,int count){
+        if(count<0){//this means current res is invalid
+            return;
+        }
+        if(res.length()>maxLen) return;
+        if(i==s.length()){
+            if(count==0&&res.length()==maxLen)
+                list.add(res);
+            return;
+        }
+        char c = s.charAt(i);
+        if(c!='('&&c!=')'){
+            dfs(res+c,s,i+1,count);
+        }
+        else{
+            dfs(res+c,s,i+1,count+(c=='('?1:-1));
+            if(res.length()==0||res.charAt(res.length()-1)!=c){
+                dfs(res,s,i+1,count);
+            }
+        }
+        
+    }
+    private int notValidCount(String s){
+        int count = 0;
+        int flag = 0;
+        for(int i = 0;i<s.length();i++){
+            char c = s.charAt(i);
+            if(c=='(') flag++;
+            else if(c==')') flag--;
+            if(flag<0){
+                count++;
+                flag = 0;
+            }
+        }
+        count += flag;
+      //  System.out.println(count);
+        return count;
+    }
+}

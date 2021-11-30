@@ -1,0 +1,101 @@
+class Solution {
+    public List<List<String>> accountsMerge(List<List<String>> accounts) {
+        Map<String,String> emailToName = new HashMap<>();
+        Map<String,Set<String>> graph = new HashMap<>();
+        for(List<String> account:accounts){
+            for(int i = 1;i<account.size();i++){
+                emailToName.put(account.get(i),account.get(0));
+                graph.putIfAbsent(account.get(i),new HashSet<>());
+                if(i!=1){
+                    graph.get(account.get(i)).add(account.get(i-1));
+                    graph.get(account.get(i-1)).add(account.get(i));
+                }
+            }
+        }
+        List<List<String>> res = new ArrayList<>();
+        Set<String> visited = new HashSet<>();
+        for(String email:emailToName.keySet()){
+            if(!visited.contains(email)){
+                List<String> list = new ArrayList<>();
+                visited.add(email);
+                dfs(graph,email,visited,list);
+                Collections.sort(list);
+                list.add(0,emailToName.get(email));
+                res.add(list);
+            }  
+        }
+        return res;
+    }
+    private void dfs(Map<String,Set<String>> graph,String email,Set<String> visited,List<String> list){
+        list.add(email);
+        if(graph.containsKey(email)){
+            for(String s:graph.get(email)){
+                if(!visited.contains(s)){
+                  //  list.add(s);
+                    visited.add(s);
+                    dfs(graph,s,visited,list);
+                }
+            }
+        }
+    }
+}
+
+class Solution {
+    public List<List<String>> accountsMerge(List<List<String>> accounts) {
+        List<List<String>> res = new ArrayList<>();
+        UnionFind uf = new UnionFind(accounts.size());
+        Map<String,Integer> mailToIndex = new HashMap<>();
+        for(int i = 0;i<accounts.size();i++){
+            for(int j = 1;j<accounts.get(i).size();j++){
+                if(mailToIndex.containsKey(accounts.get(i).get(j))){
+                    uf.union(i,mailToIndex.get(accounts.get(i).get(j)));//combine two accounts with the same email address
+                }else{
+                    mailToIndex.put(accounts.get(i).get(j),i);
+                }
+            }
+        }
+        //put emails into each account 
+        Map<Integer,Set<String>> map = new HashMap<>();
+    
+         for(int i = 0;i<accounts.size();i++){
+             int parentIndex = uf.findParent(i);//only find parent index
+          //   System.out.println(parentIndex);
+             map.putIfAbsent(parentIndex,new HashSet<>());
+             for(int j = 1;j<accounts.get(i).size();j++){
+                 map.get(parentIndex).add(accounts.get(i).get(j));
+             }
+         }
+        for(Map.Entry<Integer,Set<String>> entry:map.entrySet()){
+            int accNo = entry.getKey();
+            List<String> list = new ArrayList<>();
+            list.addAll(entry.getValue());
+            Collections.sort(list);
+            list.add(0,accounts.get(accNo).get(0));
+            res.add(list);
+        }
+        return res;    
+    }
+}
+class UnionFind{
+    int[] p;
+    public UnionFind(int n){
+        this.p = new int[n];
+        for(int i = 0;i<n;i++){
+            p[i] = i;
+        }
+    }
+    public void union(int i,int j){
+        int rootI = findParent(i);
+        int rootJ = findParent(j);
+        if(rootI!=rootJ){
+            p[rootI] = rootJ;
+        }
+    }
+   
+    public int findParent(int i){
+        while(p[i]!=i){
+            i = p[i];
+        }
+        return p[i];
+    }
+}

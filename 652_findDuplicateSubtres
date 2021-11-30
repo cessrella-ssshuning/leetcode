@@ -1,0 +1,43 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    List<TreeNode> list;
+    public List<TreeNode> findDuplicateSubtrees(TreeNode root) {
+        Map<String,Integer> strToId = new HashMap<>();
+        Map<Integer,Integer> idToCount = new HashMap<>();
+        list = new ArrayList<>();
+        getId(root,strToId,idToCount);
+        return list;
+    }
+    private int getId(TreeNode node,Map<String,Integer> strToId,Map<Integer,Integer> idToCount){
+        if(node==null) return 0;
+        int leftId = getId(node.left,strToId,idToCount);
+        int rightId = getId(node.right,strToId,idToCount);
+        String key = node.val+","+leftId+","+rightId;
+        int id = 0;
+        if(!strToId.containsKey(key)){
+            id = strToId.size()+1;
+            strToId.put(key,id);
+        }else{
+            id = strToId.get(key);
+            
+        }
+        idToCount.put(id,idToCount.getOrDefault(id,0)+1);
+        if(idToCount.get(id)==2) list.add(node);
+        return id;
+    }
+   
+}

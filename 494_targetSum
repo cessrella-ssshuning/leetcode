@@ -1,0 +1,48 @@
+class Solution {
+    /*
+    [1,1,1,1,1]
+     ^
+     dfs(0+1) dfs(1+1)  dfs(1+1+1)
+                        dfs(1+1-1)
+              dfs(1-1)  
+     dfs(0-1) dfs(-1+1)
+              dfs(-1-1)
+    
+    
+    */
+    
+    public int findTargetSumWays(int[] nums, int target) {
+        int sum = 0;
+        for(int i = 0;i<nums.length;i++){
+            sum += nums[i];
+        }//dp[i] means the number of ways to get value i
+        int[] dp = new int[2*sum+1];
+     //   System.out.println(dp.length+","+target);
+        if(target>sum||target<-sum) return 0;
+        dp[sum] = 1;
+        for(int i = 0;i<nums.length;i++){
+            int[] dp2 = new int[2*sum+1];
+            for(int j = 0;j<=2*sum;j++){
+                if(j-nums[i]>=0) dp2[j-nums[i]] += dp[j];
+                if(j+nums[i]<=2*sum) dp2[j+nums[i]] += dp[j];
+            }
+            dp = dp2;
+        }
+        return dp[target+sum];
+        
+        
+        // Map<Integer,Integer> dp = new HashMap<>();
+        // dp.put(0,1);
+        // for(int num:nums){
+        //     Map<Integer,Integer> dp2 = new HashMap<>();
+        //     for(int temp:dp.keySet()){
+        //         int key1 = temp+num;
+        //         dp2.put(key1,dp2.getOrDefault(key1,0)+dp.get(temp));
+        //         int key2 = temp-num;
+        //         dp2.put(key2,dp2.getOrDefault(key2,0)+dp.get(temp));
+        //     }
+        //     dp = dp2;
+        // }
+        // return dp.getOrDefault(s,0);
+    }
+}

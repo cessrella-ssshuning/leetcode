@@ -1,0 +1,63 @@
+class Solution {
+    List<List<String>> res;
+    Map<String,Integer> key2id;
+    Map<String,Integer> key2count;
+    Map<TreeNode,String> node2key;
+    public List<List<String>> deleteDuplicateFolder(List<List<String>> paths) {
+        res = new ArrayList<>();
+        key2id = new HashMap<>();
+        key2count = new HashMap<>();
+        node2key = new HashMap<>();
+        TreeNode root = new TreeNode("/");
+        for(List<String> path:paths){//build the tree
+            TreeNode node = root;
+            for(int i = 0;i<path.size();i++){
+                if(!node.next.containsKey(path.get(i))){
+                    TreeNode child = new TreeNode(path.get(i));
+                    node.next.put(path.get(i),child);
+                }
+                node = node.next.get(path.get(i));
+            }
+        }
+        getId(root);
+        dfs(root,new ArrayList<>());
+        return res;
+    }
+    private void dfs(TreeNode node,List<String> path){
+        String key = node2key.get(node);
+        if(key!=""&&key2count.get(key)>=2) return;//leaf nodes will definitely appear more than twice, we need to keep leaf nodes
+        if(node.val!="/"){
+            path.add(node.val);
+            res.add(new ArrayList<>(path));
+        }
+        for(TreeNode child:node.next.values()){
+            dfs(child,path);
+        }
+        if(node.val!="/"){
+            path.remove(path.size()-1);
+        }
+    }
+    private int getId(TreeNode node){
+        if(node==null) return 0;
+        String key = "";
+        List<TreeNode> nodes = new ArrayList<>(node.next.values());
+        Collections.sort(nodes,(a,b)->a.val.compareTo(b.val));
+        for(TreeNode child:nodes){
+            key += getId(child)+","+child.val+",";
+        }
+        key2count.put(key,key2count.getOrDefault(key,0)+1);
+        if(key2count.get(key)==1){
+            key2id.put(key,key2id.size()+1);
+        }
+        node2key.put(node,key);
+        return key2id.get(key);
+    }
+}
+class TreeNode{
+    String val;
+    Map<String,TreeNode> next;
+    public TreeNode(String val){
+        this.val = val;
+        next = new HashMap<>();
+    }
+}

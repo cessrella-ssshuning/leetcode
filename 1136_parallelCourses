@@ -1,0 +1,37 @@
+class Solution {
+    public int minimumSemesters(int n, int[][] relations) {
+        Map<Integer,List<Integer>> graph = new HashMap<>();
+        int[] indegree = new int[n+1];
+        for(int[] relation:relations){
+            graph.putIfAbsent(relation[0],new ArrayList<>());
+            graph.get(relation[0]).add(relation[1]);
+            indegree[relation[1]]++;
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        for(int i = 1;i<indegree.length;i++){
+            if(indegree[i]==0){
+                queue.offer(i);
+            }
+        }
+        int numC = queue.size();
+        int res = 1;
+        while(!queue.isEmpty()){
+            int size = queue.size();
+            if(numC==n) return res;
+            for(int i = 0;i<size;i++){
+                int c = queue.poll();
+                if(graph.containsKey(c)){
+                    for(int nextC:graph.get(c)){
+                        indegree[nextC]--;
+                        if(indegree[nextC]==0){
+                            numC++;
+                            queue.offer(nextC);
+                        }
+                    }
+                }
+            }
+            res++;
+        }
+        return -1;
+    }
+}
