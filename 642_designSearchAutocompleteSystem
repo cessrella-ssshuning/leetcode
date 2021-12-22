@@ -1,0 +1,83 @@
+class AutocompleteSystem {
+    class TrieNode implements Comparable<TrieNode> {
+        TrieNode[] children;
+        String s;
+        List<TrieNode> hot;
+        int times;
+        public TrieNode(){
+            times = 0;
+            children = new TrieNode[128];
+            s = null;
+            hot = new ArrayList<>();
+        }
+        @Override
+        public int compareTo(TrieNode node){
+            if(node.times==this.times){
+                return this.s.compareTo(node.s);
+            }
+            return node.times-this.times;
+        }
+        //this is to update the bottom node to each node's list along the way
+        public void update(TrieNode node){
+            if(!hot.contains(node)){
+                hot.add(node);
+            }
+            Collections.sort(hot);
+            if(hot.size()>3){
+                hot.remove(hot.size()-1);//remove the one ranking last
+            }
+        }
+    }
+    TrieNode root;
+    TrieNode cur;
+    StringBuilder sb;
+    public AutocompleteSystem(String[] sentences, int[] times) {
+        root = new TrieNode();
+        sb = new StringBuilder();
+        cur = root;
+        for(int i = 0;i<sentences.length;i++){
+            //building the trie tree
+            add(sentences[i],times[i]);
+        }
+    }
+    private void add(String sentence,int t){
+        TrieNode node = root;
+        List<TrieNode> list = new ArrayList<>();
+        for(char c:sentence.toCharArray()){
+            if(node.children[c]==null){
+                node.children[c] = new TrieNode();
+            }
+            //adding each character of the node to the tree
+            node = node.children[c];
+            //adding appearance of the character to the current node
+            list.add(node);
+        }
+        node.s = sentence;//only the last node has this field;
+        node.times += t;
+        for(TrieNode n:list){
+            n.update(node);
+        }
+        
+    }
+    
+    public List<String> input(char c) {
+        List<String> res = new ArrayList<>();
+        if(c=='#'){
+            //adding current input to history
+            add(sb.toString(),1);
+            sb = new StringBuilder();
+            cur = root;
+            return res;
+        }
+        sb.append(c);
+        if(cur!=null){
+            cur = cur.children[c];
+        }
+        if(cur==null) return res;
+        
+        for(TrieNode node:cur.hot){
+            res.add(node.s);
+        }
+        return res;    
+    }
+}

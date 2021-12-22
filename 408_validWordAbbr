@@ -1,0 +1,39 @@
+class Solution {
+    /*
+    "apple"
+     ^
+    "a2e"
+     ^
+    */
+    public boolean validWordAbbreviation(String word, String abbr) {
+        int l1 = 0;
+        int l2 = 0;
+        if(abbr.length()>word.length()) return false;
+        while(l2<abbr.length()&&l1<word.length()){
+            
+            if(Character.isDigit(abbr.charAt(l2))){
+                int num = 0;
+                int count = 0;
+                while(l2<abbr.length()&&Character.isDigit(abbr.charAt(l2))){
+                    num = num*10+abbr.charAt(l2)-'0';
+                    l2++;
+                    count++;
+                }
+                l2--;
+                //leading zero
+                String numStr = num+"";
+                if(num==0||numStr.length()<count) return false;
+                l1 += num-1;//make sure they l1 and l2 are not out of boundary for now
+              //  System.out.println(l1+","+l2);
+            }else{
+                 char c1 = word.charAt(l1);
+                 char c2 = abbr.charAt(l2);
+                 if(c1!=c2) return false;
+            }
+            l1++;
+            l2++;
+        }
+        if(l1!=word.length()||l2!=abbr.length()) return false;
+        return true;
+    }
+}

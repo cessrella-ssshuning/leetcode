@@ -1,0 +1,30 @@
+class Solution {
+    /*
+    [10,6,8,5,11,9]
+                 ^
+    就是最高和次高中间夹了矮的
+    keep a descending order in stack
+    [3,1,2,1,2,0]
+    stack(5,11)
+    
+    
+    */
+    public int[] canSeePersonsCount(int[] heights) {
+        Stack<Integer> stack = new Stack<>();
+        int[] res = new int[heights.length];
+        for(int i = heights.length-1;i>=0;i--){
+            int count = 0;
+            //next element larger than current stack top
+            while(!stack.isEmpty()&&heights[stack.peek()]<=heights[i]){
+                stack.pop();
+                res[i]++;
+
+            }
+            if(!stack.isEmpty()) res[i]++;//如果不为空 说明栈顶元素是当前元素的next greater element,这个还是可以看到的
+            
+            stack.push(i);
+        }
+       
+        return res;
+    }
+}

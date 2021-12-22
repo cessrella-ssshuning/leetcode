@@ -1,0 +1,29 @@
+class Solution {
+    /*
+    2736
+    ^
+    7632
+    ^
+    bucket(0,0,0,2,0,0,3,1,0,0)
+    k>
+    
+    */
+    public int maximumSwap(int num) {
+        char[] numArr = Integer.toString(num).toCharArray();
+        int[] buckets = new int[10];
+        for(int i = 0;i<numArr.length;i++){
+            buckets[numArr[i]-'0'] = i;//store the mapping for number values to index
+        }
+        for(int i = 0;i<numArr.length;i++){
+            for(int j = 9;j>numArr[i]-'0';j--){
+                if(buckets[j]>i){//only swap once because starting from the higher position
+                    int tmp = numArr[buckets[j]];
+                    numArr[buckets[j]] = numArr[i];
+                    numArr[i] = (char)tmp;
+                    return Integer.parseInt(new String(numArr));
+                }
+            }
+        }
+        return num;
+    }
+}

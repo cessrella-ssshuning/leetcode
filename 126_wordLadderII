@@ -1,0 +1,71 @@
+class Solution {
+    /*
+    如果用单纯的queue和set的话，set会把最后的endword加到visited里，就不会有第二条路径出现了
+    */
+    public List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
+        List<List<String>> res = new ArrayList<>();
+        Set<String> wordSet = new HashSet<>();
+        for(String word:wordList){
+            wordSet.add(word);
+        }
+        if(!wordSet.contains(endWord)) return res;
+        
+        Map<String,List<String>> map = new HashMap<>();
+        Set<String> beginSet = new HashSet<>();
+        beginSet.add(beginWord);
+        bfs(beginSet,wordSet,endWord,map);
+        //System.out.println(map);
+        List<String> list = new ArrayList<>();
+        list.add(beginWord);
+        dfs(beginWord,endWord,map,res,list);
+        return res;
+    }
+    private void dfs(String cur,String endWord,Map<String,List<String>> map,List<List<String>> res,List<String> list){
+        if(cur.equals(endWord)){
+            res.add(new ArrayList<>(list));
+            return;
+        }
+        if(map.containsKey(cur)){
+                    
+            for(String s:map.get(cur)){
+                list.add(s);
+                dfs(s,endWord,map,res,list);
+                list.remove(list.size()-1);
+            }
+                    
+        }
+    }
+    private void bfs(Set<String> beginSet,Set<String> wordSet,String endWord,Map<String,List<String>> map){
+        if(beginSet.size()==0) return;
+        boolean finish = false;
+        Set<String> tmpSet = new HashSet<>();
+        wordSet.removeAll(beginSet);
+        for(String s: beginSet){
+            char[] sArr = s.toCharArray();
+            for(int j = 0;j<sArr.length;j++){
+                char tmp = sArr[j];
+                for(char c = 'a';c<='z';c++){
+                    if(sArr[j]==c) continue;
+                    sArr[j] = c;
+                    String newWord = new String(sArr);
+                    
+                    if(wordSet.contains(newWord)){
+                        if(newWord.equals(endWord)){
+                            finish = true;
+                        }else{
+                            tmpSet.add(newWord);
+                        }
+                        map.putIfAbsent(s,new ArrayList<>());
+                        map.get(s).add(newWord);
+                        
+                    }
+                    
+                }
+                sArr[j] = tmp;
+            }
+        }
+        if(!finish) bfs(tmpSet,wordSet,endWord,map);
+
+    }
+    
+}

@@ -1,0 +1,45 @@
+class Solution {
+    /*
+    catsanddog
+    0123456789
+       ^
+    s cat
+      - dfs(sanddog)
+         sand
+           - dfs(dog)
+    s cats
+      - dfs(anddog)
+         and
+           - dfs(dog)
+         
+    */
+    List<String> res;
+    public List<String> wordBreak(String s, List<String> wordDict) {
+        res = new ArrayList<>();
+        Set<String> set = new HashSet<>();
+        for(String word:wordDict){
+            set.add(word);
+        }
+        dfs(s,0,set,"");
+        return res;
+    }
+    private void dfs(String s, int curPos,Set<String> set,String sentence){
+        if(curPos>s.length()) return;
+       // System.out.println(s);
+        if(s.length()==0){
+            res.add(sentence);
+            return;
+        }
+        for(int i = curPos+1;i<=s.length();i++){
+            String sub = s.substring(0,i); 
+            if(set.contains(sub)){
+                if(sentence.length()==0){
+                    dfs(s.substring(i),0,set,sub);
+                }else{
+                    dfs(s.substring(i),0,set,sentence+" "+sub);
+                }
+                
+            }
+        }
+    }
+}

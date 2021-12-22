@@ -1,0 +1,35 @@
+class Solution {
+    /*
+     321
+     11
+    ---
+      
+    */
+    public String addStrings(String num1, String num2) {
+        if(num1.length()<num2.length()){
+            return addStrings(num2,num1);
+        }
+        String str1 = new StringBuilder(num1).reverse().toString();
+        String str2 = new StringBuilder(num2).reverse().toString();
+        int i = 0;
+        int carry = 0;
+        StringBuilder sb = new StringBuilder();
+        while(i<str2.length()){
+            int sum = str2.charAt(i)-'0'+str1.charAt(i)-'0'+carry;
+            sb.append(sum%10);
+            carry = sum/10;
+            i++;
+        }
+        while(i<str1.length()){
+            int val = str1.charAt(i)-'0'+carry;
+            sb.append(val%10);
+            carry = val/10;
+            i++;
+        }
+        if(carry!=0){
+            sb.append(carry);
+        }
+        return sb.reverse().toString();
+        
+    }
+}

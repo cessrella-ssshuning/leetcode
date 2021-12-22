@@ -1,0 +1,42 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public List<List<Integer>> verticalTraversal(TreeNode root) {
+        List<List<Integer>> list = new ArrayList<>();
+        TreeMap<Integer,TreeMap<Integer,PriorityQueue<Integer>>> map = new TreeMap<>();
+        dfs(0,0,map,root);
+        for(TreeMap<Integer,PriorityQueue<Integer>> innerMap:map.values()){
+            List<Integer> nodes = new ArrayList<>();
+            for(PriorityQueue<Integer> pq:innerMap.values()){
+                while(!pq.isEmpty()){
+                    nodes.add(pq.poll());
+                }
+            }
+            list.add(nodes);
+        }
+        return list;
+    }
+    private void dfs(int col,int level,TreeMap<Integer,TreeMap<Integer,PriorityQueue<Integer>>> map,TreeNode node){
+        if(node==null) return;
+        map.putIfAbsent(col,new TreeMap<>());
+        if(!map.get(col).containsKey(level)){
+            map.get(col).put(level,new PriorityQueue<>());
+        }
+        map.get(col).get(level).offer(node.val);
+        dfs(col-1,level+1,map,node.left);
+        dfs(col+1,level+1,map,node.right);
+    }
+}

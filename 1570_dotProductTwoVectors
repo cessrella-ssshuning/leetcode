@@ -1,0 +1,21 @@
+class SparseVector {
+    
+    Map<Integer,Integer> vectorMap;//nonzero key value mappings
+    SparseVector(int[] nums) {
+        vectorMap = new HashMap<>();
+        for(int i=0;i<nums.length;i++){
+            vectorMap.put(i,nums[i]);
+        }
+    }
+    
+	// Return the dotProduct of two sparse vectors
+    public int dotProduct(SparseVector vec) {
+        int product = 0;
+        for(int key:vectorMap.keySet()){
+            if(vec.vectorMap.containsKey(key)){
+                product += vectorMap.get(key)*vec.vectorMap.get(key);
+            }
+        }
+        return product;
+    }
+}

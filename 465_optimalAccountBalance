@@ -1,0 +1,32 @@
+class Solution {
+    public int minTransfers(int[][] transactions) {
+        Map<Integer,Integer> map = new HashMap<>();
+        for(int[] t:transactions){
+            map.put(t[0],map.getOrDefault(t[0],0)+t[2]);//to be paid
+            map.put(t[1],map.getOrDefault(t[1],0)-t[2]);//to pay
+        }
+        List<Integer> list = new ArrayList<>();
+        for(int i:map.values()){
+            if(i!=0){
+                list.add(i);
+            }
+        }
+        return dfs(0,list);
+    }
+    private int dfs(int cur,List<Integer> list){
+        if(cur==list.size()) return 0;//reach the end of the list
+        int val = list.get(cur);
+        if(val==0) return dfs(cur+1,list);//current account has been cleared
+        int min = Integer.MAX_VALUE;
+        for(int i = cur+1;i<list.size();i++){
+            int next = list.get(i);
+            if(next*val<0){//do the match
+                list.set(i,next+val);
+                min = Math.min(min,dfs(cur+1,list)+1);//do the same operation for cur+1
+                list.set(i,next);
+            }
+            if(next+val==0) break;//this is already the best answer, break here
+        }
+        return min;
+    }
+}

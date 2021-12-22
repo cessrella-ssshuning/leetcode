@@ -1,0 +1,44 @@
+class ExamRoom {
+
+    TreeSet<Integer> students;
+    int n;
+    public ExamRoom(int n) {
+        students = new TreeSet<>();
+        this.n = n;
+    }
+    
+    public int seat() {
+        if(students.size()==0){
+            students.add(0);
+            return 0;
+        }
+        int dist = students.first();
+        Integer prev = null;
+
+        /*
+        0              9
+                4
+        */
+        int pos = 0;
+        for(Integer s:students){
+            if(prev!=null){
+                int mid = (prev+s)/2;
+                if(dist<mid-prev){
+                    dist = mid-prev;
+                    pos = mid;
+                }  
+            }
+            prev = s;
+        }
+        if(n-1-students.last()>dist){
+            dist = n-1-students.last();
+            pos = n-1;
+        }
+        students.add(pos);
+        return pos;
+    }
+    
+    public void leave(int p) {
+       students.remove(p);
+    }
+}
