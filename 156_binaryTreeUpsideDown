@@ -1,0 +1,85 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+       1
+     4   3
+  5   2
+     3  1
+    1 -> 2 -> 4 -> null
+            return 4
+         newRoot = 4
+    4.left = 5
+    4.right = 2
+    return 4                  
+     newRoot = upsideDown(2) 
+     2.left = 3
+     2.right = 1
+     return 4
+    到第二层recursion的时候 root还是2，但是newroot一路传上去一直是4
+ */
+class Solution {
+    public TreeNode upsideDownBinaryTree(TreeNode root) {
+        if(root==null||root.left==null) return root;
+        TreeNode newRoot = upsideDownBinaryTree(root.left);
+        
+        root.left.left = root.right;   
+        root.left.right = root;         
+        root.left = null;
+        root.right = null;
+        return newRoot;
+        
+    }
+}/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+       1
+     4   3
+  5   2
+     3  1
+    1 -> 2 -> 4 -> null
+            return 4
+         newRoot = 4
+    4.left = 5
+    4.right = 2
+    return 4                  
+     newRoot = upsideDown(2) 
+     2.left = 3
+     2.right = 1
+     return 4
+    到第二层recursion的时候 root还是2，但是newroot一路传上去一直是4
+ */
+class Solution {
+    public TreeNode upsideDownBinaryTree(TreeNode root) {
+        if(root==null||root.left==null) return root;
+        TreeNode newRoot = upsideDownBinaryTree(root.left);
+        
+        root.left.left = root.right;   
+        root.left.right = root;         
+        root.left = null;
+        root.right = null;
+        return newRoot;
+        
+    }
+}
