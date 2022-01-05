@@ -1,0 +1,32 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+   in order successor -> find next larger element
+   5>3
+   res = 5
+   root = root.left = 3
+   3==3
+   root = root.right = 4
+   4>3
+   res = 4
+   root = root.left = null
+ */
+class Solution {
+    public TreeNode inorderSuccessor(TreeNode root, TreeNode p) {
+        TreeNode res = null;
+        while(root!=null){
+            if(root.val>p.val){
+                res = root;
+                root = root.left;
+            }else{
+                root = root.right;
+            }
+        }
+        return res;
+    }
+}
