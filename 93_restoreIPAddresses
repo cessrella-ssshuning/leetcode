@@ -1,0 +1,23 @@
+class Solution {
+    public List<String> restoreIpAddresses(String s) {
+        List<String> list = new ArrayList<>();
+        dfs(list,s,0,"",0);
+        return list;
+    }
+    private void dfs(List<String> list,String s,int index,String cur,int count){
+        if(index==s.length()&&count==4){
+            list.add(cur);
+            return;
+        }
+        for(int i = index+1;i<=s.length()&&i<=index+3;i++){
+            String temp = s.substring(index,i);
+            if(temp.charAt(0)=='0'&&temp.length()>1) break;
+            int val = Integer.valueOf(s.substring(index,i));
+            if(val>=0&&val<=255){
+                if(count>0&&cur.charAt(cur.length()-1)!='.')   
+                    cur += ".";
+                dfs(list,s,i,cur+val,count+1);
+            }
+        }
+    }
+}

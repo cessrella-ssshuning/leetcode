@@ -1,0 +1,29 @@
+class Solution {
+    /*
+     - -
+     - -
+     - -
+    */
+    int[][] dp;
+    int m;
+    int n;
+    public int uniquePaths(int m, int n) {
+        this.m = m;
+        this.n = n;
+        dp = new int[m+1][n+1];
+        return helper(m,n);
+    }
+    private int helper(int x,int y){
+         if(x<0||y<0){
+            return 0;
+        }else if(x==1&&y==1){
+            return 1;
+        } if(dp[x][y]>0){
+            return dp[x][y];
+        }
+        int leftPaths = helper(x,y-1);
+        int rightPaths = helper(x-1,y);
+        dp[x][y] = leftPaths+rightPaths;
+        return dp[x][y];
+    }
+}

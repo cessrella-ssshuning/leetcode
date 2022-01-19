@@ -1,0 +1,42 @@
+class Solution {
+    public String validIPAddress(String queryIP) {
+        if(queryIP.indexOf(".")>0){
+            if(queryIP.lastIndexOf(".")==queryIP.length()-1) return "Neither";
+            String[] ips = queryIP.split("\\.");
+            if(ips.length!=4) return "Neither";
+            //System.out.println(Arrays.toString(ips));
+            for(String ip:ips){
+                if(ip.length()==0||ip.length()>3) return "Neither";
+                if(ip.charAt(0)=='0'&&ip.length()>1) return "Neither";
+                for(int i = 0;i<ip.length();i++){
+                    if(!Character.isDigit(ip.charAt(i))){
+                        return "Neither";
+                    }
+                }
+                int val = Integer.valueOf(ip);
+                
+                if(val<0||val>255){
+                    return "Neither";
+                }
+            }
+            return "IPv4";
+        }else if(queryIP.indexOf(":")>0){
+            if(queryIP.lastIndexOf(":")==queryIP.length()-1) return "Neither";
+            String[] ips = queryIP.split(":");
+            if(ips.length!=8) return "Neither";
+            for(String ip:ips){
+                if(ip.length()==0||ip.length()>4) return "Neither";
+                System.out.println(Arrays.toString(ips));
+                for(int i = 0;i<ip.length();i++){
+                    if(!Character.isDigit(ip.charAt(i))){
+                        char ch = Character.toLowerCase(ip.charAt(i));
+                        if(ch<'a'||ch>'f') return "Neither";
+                    }
+                }
+            }
+            return "IPv6";
+        }
+        return "Neither";
+        
+    }
+}
